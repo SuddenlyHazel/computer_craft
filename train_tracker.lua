@@ -15,7 +15,6 @@ function printTable(t, indent)
     end
 end
 
-
 function track_train(message)
     local now = os.epoch("local") / 1000
 
@@ -35,10 +34,14 @@ function track_train(message)
         local_train_tracking[station_name][train_name]["round_trip_time"] = (last_time + departed_at) / 2
     else
         print("first time seeing train")
-        local_train_tracking[station_name] = {}
-        local_train_tracking[station_name][train_name] = {}
-        local_train_tracking[station_name][train_name]["round_trip_time"] = 0
-        local_train_tracking[station_name][train_name]["last_update_at"] = now
+        if not local_train_tracking[station_name] then
+            local_train_tracking[station_name] = {}
+        end
+        if not local_train_tracking[station_name][train_name] then
+            local_train_tracking[station_name][train_name] = {}
+            local_train_tracking[station_name][train_name]["round_trip_time"] = 0
+            local_train_tracking[station_name][train_name]["last_update_at"] = now
+        end
     end
 end
 
@@ -56,4 +59,3 @@ while true do
     track_train(message)
     log_data_sample(message)
 end
-
