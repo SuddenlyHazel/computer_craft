@@ -22,9 +22,8 @@ function track_train(message)
     local train_name = message["train_name"]
     local station_name = message["station_name"]
 
-    local data_maybe = local_train_tracking[station_name]
-    if data_maybe and data_maybe[train_name] then
-        data_maybe["round_trip_time"] = (departed_at - data_maybe["round_trip_time"]) / 2
+    if local_train_tracking[station_name] and local_train_tracking[station_name][train_name] then
+        local_train_tracking[station_name][train_name]["round_trip_time"] = (departed_at - data_maybe["round_trip_time"]) / 2
     else
         local_train_tracking[station_name] = {}
         local_train_tracking[station_name][train_name] = {}
