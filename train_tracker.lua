@@ -30,7 +30,7 @@ function track_train(message)
     else
         local_train_tracking[station_name] = {}
         local_train_tracking[station_name][train_name] = {}
-        local_train_tracking[station_name][train_name]["round_trip_time"] = departed_at/2
+        local_train_tracking[station_name][train_name]["round_trip_time"] = 0
     end
 end
 
