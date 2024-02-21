@@ -40,7 +40,7 @@ function track_train(message)
         if not local_train_tracking[station_name][train_name] then
             local_train_tracking[station_name][train_name] = {}
             local_train_tracking[station_name][train_name]["round_trip_time"] = 0
-            local_train_tracking[station_name][train_name]["last_update_at"] = now
+            local_train_tracking[station_name][train_name]["last_update_at"] = departed_at
         end
     end
 end
