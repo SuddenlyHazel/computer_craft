@@ -18,12 +18,14 @@ end
 
 function track_train(message)
     local now = os.epoch("local") / 1000
+
     local departed_at = message["depart_at"]
     local train_name = message["train_name"]
     local station_name = message["station_name"]
 
     if local_train_tracking[station_name] and local_train_tracking[station_name][train_name] then
         local last_time = local_train_tracking[station_name][train_name]["round_trip_time"]
+
         local_train_tracking[station_name][train_name]["last_update_at"] = now
 
         if now - local_train_tracking[station_name][train_name]["last_update_at"] < 5 then
@@ -33,6 +35,7 @@ function track_train(message)
 
         local_train_tracking[station_name][train_name]["round_trip_time"] = (last_time + departed_at) / 2
     else
+        print("first time seeing train")
         local_train_tracking[station_name] = {}
         local_train_tracking[station_name][train_name] = {}
         local_train_tracking[station_name][train_name]["round_trip_time"] = 0
