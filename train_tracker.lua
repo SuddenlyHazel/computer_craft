@@ -23,9 +23,9 @@ function track_train(message)
     local station_name = message["station_name"]
 
     if local_train_tracking[station_name] and local_train_tracking[station_name][train_name] then
-        local last_time = local_train_tracking[station_name][train_name]["round_trip_time"]
+        local last_time = local_train_tracking[station_name][train_name]["last_update_at"]
 
-        if now - local_train_tracking[station_name][train_name]["last_update_at"] < 5 then
+        if now - local_train_tracking[station_name][train_name]["last_update_at"] < 2 then
             print("debounce")
             return
         end -- debounce
@@ -52,10 +52,6 @@ end
 
 while true do
     local event, message = rednet.receive(protocol)
-    print(message["station_name"])
-    print(message["train_name"])
-    print(message["depart_at"])
-
     track_train(message)
     log_data_sample(message)
 end
