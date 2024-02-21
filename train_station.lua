@@ -13,13 +13,14 @@ while true do
       time = os.epoch("local") / 1000
     }
     message["depart_at"] = now;
-    
+
     if redstone.getInput("left") then
       message["name"] = "base_train_a"
-      rednet.broadcast(message, "base_station")
+      print("train a exited station")
     elseif redstone.getInput("right") then
       message["name"] = "base_train_b"
-      rednet.broadcast("train_2", "base_station")
-      print("train_2")
+      print("train b exited station")
     end
+
+    rednet.broadcast(message, "base_station")
   end
