@@ -30,8 +30,8 @@ function track_train(message)
             return
         end -- debounce
 
-        local_train_tracking[station_name][train_name]["last_departed_at"] = last_departed_at
         local_train_tracking[station_name][train_name]["round_trip_time"] = (departed_at - last_departed_at)
+        local_train_tracking[station_name][train_name]["last_departed_at"] = departed_at
     else
         print("first time seeing train")
         if not local_train_tracking[station_name] then
