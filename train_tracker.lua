@@ -3,24 +3,38 @@ local protocol = "train_station"
 
 local_train_tracking = {}
 
+function printTable(t, indent)
+    indent = indent or 0
+    for key, value in pairs(t) do
+        if type(value) == "table" then
+            print(string.rep("  ", indent) .. key .. ":")
+            printTable(value, indent + 1)
+        else
+            print(string.rep("  ", indent) .. key .. ": " .. tostring(value))
+        end
+    end
+end
+
+
 function track_train(message)
     local now = os.epoch("local") / 1000
     local departed_at = message["depart_at"]
+    local train_name = message["train_name"]
+    local station_name = message["station_name"]
 
-    local data_maybe = local_train_tracking[message["station_name"]][message["train_name"]]
-    if data_maybe then
+    local data_maybe = local_train_tracking[station_name]
+    if data_maybe and data_maybe[train_name] then
         data_maybe["round_trip_time"] = (departed_at - data_maybe["round_trip_time"]) / 2
     else
-        local new = {
-        }
-        new["round_trip_time"] = departed_at
-        local_train_tracking[message["station_name"]][message["train_name"]] = new
+        local_train_tracking[station_name] = {}
+        local_train_tracking[station_name][train_name] = {}
+        local_train_tracking[station_name][train_name]["round_trip_time"] = departed_at
     end
 end
 
 function log_data_sample(message)
-    local data_maybe = local_train_tracking[message["station_name"]][message["train_name"]]
-    print(data_maybe["round_trip_time"])
+    local data = local_train_tracking[message["station_name"]][message["train_name"]]
+    printTable(data)
 end
 
 while true do
@@ -32,3 +46,4 @@ while true do
     track_train(message)
     log_data_sample(message)
 end
+
