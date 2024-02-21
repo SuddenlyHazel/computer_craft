@@ -1,26 +1,29 @@
 local modem = peripheral.find("modem", rednet.open)
 
+local protocol = "train_station"
+
 local message = {
-  name = "none",
+  train_name = "none",
   depart_at = 0,
+  direction = "exit",
+  station_name = "base_station"
 }
 
 while true do
     local event = os.pullEvent("redstone")
     print("A redstone input has changed!")
 
-    local now = {
-      time = os.epoch("local") / 1000
-    }
+    local now = os.epoch("local") / 1000
+
     message["depart_at"] = now;
 
     if redstone.getInput("left") then
-      message["name"] = "base_train_a"
+      message["train_name"] = "train_a"
       print("train a exited station")
     elseif redstone.getInput("right") then
-      message["name"] = "base_train_b"
+      message["train_name"] = "train_b"
       print("train b exited station")
     end
 
-    rednet.broadcast(message, "base_station")
+    rednet.broadcast(message, protocol)
   end
