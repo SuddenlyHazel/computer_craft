@@ -1,3 +1,5 @@
 {
-  "0" : "Hello Json World!"
+  "0" : "Welcome to Zelandia!",
+  "1" : "- Kits",
+  "2" : "  /kits list -- list all available kits"
 }
