@@ -7,9 +7,11 @@ end
 while true do
     local now = os.epoch("local") / 1000;
     print("refreshing motd", now)
-    
+
     local resp = http.get("https://raw.githubusercontent.com/SuddenlyHazel/computer_craft/main/motd.json")
     local body = resp.readAll();
+    resp.close()
+    
     body = textutils.unserialiseJSON(body);
 
     attached_monitor.clear()
