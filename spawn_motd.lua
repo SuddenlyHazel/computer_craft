@@ -48,9 +48,10 @@ while true do
     print("current hash is: ", current_hash)
 
     if current_hash ~= last_hash then
-      print("hash has changed!")
+        print("hash has changed!")
         refresh_monitor(current_hash)
     end
+    last_hash = current_hash
     -- sleep for 30 seconds 
     os.sleep(5)
 end
