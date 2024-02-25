@@ -13,6 +13,6 @@ while true do
     end
 
     print("Player in range?", is_present)
-    redstone.setOutput("top", is_present and is_disabled)
+    redstone.setOutput("top", is_present and not is_disabled)
     os.sleep(5)
 end
