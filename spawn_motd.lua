@@ -8,14 +8,14 @@ while true do
     local now = os.epoch("local") / 1000;
     print("refreshing motd", now)
 
-    local resp = http.get("https://raw.githubusercontent.com/SuddenlyHazel/computer_craft/main/motd.json")
+    local resp = http.get("https://raw.githubusercontent.com/SuddenlyHazel/computer_craft/main/motd.json", {["Cache-Control"] = "no-store"})
     local body = resp.readAll();
     resp.close()
     
     body = textutils.unserialiseJSON(body);
 
     attached_monitor.clear()
-    
+
     attached_monitor.setCursorPos(1, 1)
     attached_monitor.write(body["headline"])
 
