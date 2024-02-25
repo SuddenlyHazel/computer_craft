@@ -8,30 +8,23 @@ end
 local cache_bust = 0
 
 function get_hash()
-  local resp = http.get("https://api.github.com/repos/SuddenlyHazel/computer_craft/branches/main")
-  local body = resp.readAll()
-  resp.close()
-  body = textutils.unserialiseJSON(body)
-  return body["sha"]
+    local resp = http.get("https://api.github.com/repos/SuddenlyHazel/computer_craft/commits/main")
+    local body = resp.readAll()
+    resp.close()
+    body = textutils.unserialiseJSON(body)
+    return body["sha"]
 end
 
 local last_hash = ""
 
-while true do
-    local now = os.epoch("local") / 1000;
-    print("refreshing motd", now)
-
-    local current_hash = get_hash()
-    print("current hash is: ", current_hash)
-
-    if current_hash == last_hash then goto continue end
-
-    cache_bust = cache_bust + 10
-
-    local resp = http.get(string.format("https://raw.githubusercontent.com/SuddenlyHazel/computer_craft/%s/motd.json?", current_hash), {["Cache-Control"] = "no-store"})
+function refresh_monitor(file_hash)
+    local resp = http.get(string.format("https://raw.githubusercontent.com/SuddenlyHazel/computer_craft/%s/motd.json?",
+        file_hash), {
+        ["Cache-Control"] = "no-store"
+    })
     local body = resp.readAll();
     resp.close()
-    
+
     body = textutils.unserialiseJSON(body);
 
     attached_monitor.clear()
@@ -45,8 +38,20 @@ while true do
         attached_monitor.write(value)
         n = n + 1
     end
+end
 
-    ::continue::
+while true do
+    local now = os.epoch("local") / 1000;
+    print("refreshing motd", now)
+
+    local current_hash = get_hash()
+    print("current hash is: ", current_hash)
+
+    if current_hash ~= last_hash then
+        print("hash has changed!")
+        refresh_monitor(current_hash)
+    end
+    last_hash = current_hash
     -- sleep for 30 seconds 
     os.sleep(5)
 end
