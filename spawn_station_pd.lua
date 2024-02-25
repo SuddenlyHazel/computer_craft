@@ -6,7 +6,13 @@ end
 
 while true do
     local is_present = player_detector.isPlayersInCubic(20,20,20)
+    local is_disabled = redstone.getInput("right")
+
+    if is_disabled then
+        print("Disable lever is engaged")
+    end
+    
     print("Player in range?", is_present)
-    redstone.setOutput("top", is_present)
+    redstone.setOutput("top", is_present & is_disabled)
     os.sleep(5)
 end
