@@ -8,7 +8,7 @@ end
 local cache_bust = 0
 
 function get_hash()
-    local resp = http.get("https://api.github.com/repos/SuddenlyHazel/computer_craft/branches/main")
+    local resp = http.get("https://api.github.com/repos/SuddenlyHazel/computer_craft/commits/main")
     local body = resp.readAll()
     resp.close()
     body = textutils.unserialiseJSON(body)
