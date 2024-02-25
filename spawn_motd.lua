@@ -29,5 +29,5 @@ while true do
         n = n + 1
     end
     -- sleep for 30 seconds 
-    os.sleep(30)
+    os.sleep(5)
 end
