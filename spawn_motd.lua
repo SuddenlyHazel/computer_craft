@@ -15,8 +15,13 @@ while true do
     body = textutils.unserialiseJSON(body);
 
     attached_monitor.clear()
-    local n = 1
-    for key, value in pairs(body) do
+    
+    attached_monitor.setCursorPos(1, 1)
+    attached_monitor.write(body["headline"])
+
+
+    local n = 2
+    for _, value in pairs(body["body"]) do
         attached_monitor.setCursorPos(1, n)
         attached_monitor.write(value)
         n = n + 1

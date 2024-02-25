@@ -1,5 +1,8 @@
 {
-  "0" : "Welcome to Zelandia!",
-  "1" : "- Kits",
-  "2" : "  /kits list -- list all available kits"
+  "headline" : "Welcome to Zelandia!",
+  "body" : [
+    "[Kits]",
+    "  /kits list | list all kits",
+    "  /kit give @a <kit name> | give yourself a kit"
+  ]
 }
