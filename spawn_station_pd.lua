@@ -11,8 +11,8 @@ while true do
     if is_disabled then
         print("Disable lever is engaged")
     end
-    
+
     print("Player in range?", is_present)
-    redstone.setOutput("top", is_present & is_disabled)
+    redstone.setOutput("top", is_present and is_disabled)
     os.sleep(5)
 end
