@@ -24,7 +24,7 @@ while true do
     local current_hash = get_hash()
     print("current hash is: ", current_hash)
 
-    if current_hash == last_hash then goto continue
+    if current_hash == last_hash then goto continue end
 
     cache_bust = cache_bust + 10
 
