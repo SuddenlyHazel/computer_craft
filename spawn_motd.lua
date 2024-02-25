@@ -4,11 +4,13 @@ if attached_monitor == nil then
     error("Monitor not found. Please ensure a monitor is connected.")
 end
 
+local cache_bust = 0
+
 while true do
     local now = os.epoch("local") / 1000;
     print("refreshing motd", now)
-
-    local resp = http.get("https://raw.githubusercontent.com/SuddenlyHazel/computer_craft/main/motd.json", {["Cache-Control"] = "no-store"})
+    cache_bust = cache_bust + 10
+    local resp = http.get(string.format("https://raw.githubusercontent.com/SuddenlyHazel/computer_craft/main/motd.json?v=%s", cache_bust), {["Cache-Control"] = "no-store"})
     local body = resp.readAll();
     resp.close()
     
