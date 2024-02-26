@@ -1,0 +1,31 @@
+SETTINGS_KEY = "hazel.computer_craft"
+
+
+DEFAULT_SETTING = {
+    ["commit_url"] = "https://api.github.com/repos/SuddenlyHazel/computer_craft/commits/main",
+    ["last_commit_hash"] = "",
+    ["boot_config"] = "boot.json",
+    ["boot_program"] = nil,
+}
+
+function getHash(url)
+    local resp = http.get(url)
+    local body = resp.readAll()
+    resp.close()
+    body = textutils.unserialiseJSON(body)
+    return body["sha"]
+end
+
+function readConfig()
+    return settings.get(SETTINGS_KEY, DEFAULT_SETTING)
+end
+
+local config = readConfig()
+local currentHash = getHash(config["commit_url"])
+local lastHash = config["last_commit_hash"]
+
+if lastHash ~= currentHash then
+    print("Repo has been updated")
+    print(string.format("last_sha: %s, current_sha: %s", lastHash, currentHash))
+end
+
