@@ -1,6 +1,13 @@
 {
     "programs": [
         {
+            "name" : "Startup Script",
+            "id" : "startup",
+            "files" : [
+                "startup.lua"
+            ]
+        },
+        {
             "name": "Factory GUI",
             "id": "factory_gui",
             "files": [

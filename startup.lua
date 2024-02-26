@@ -52,11 +52,17 @@ local config = readConfig()
 local currentHash = getHash(config["commit_url"])
 local lastHash = config["last_commit_hash"]
 
+function updateFiles(bootJson)
+    local programs = bootJson["programs"]
+    for _, value in pairs(programs) do
+        pretty.pretty_print(value)
+    end
+end
 if lastHash ~= currentHash then
     print("Repo has been updated")
     print(string.format("last_sha: %s, current_sha: %s", lastHash, currentHash))
     print("Fetching boot.json..")
 
     local bootJson = readBootConfig(currentHash, config)
-    pretty.pretty_print(bootJson)
+    updateFiles(bootJson)
 end
