@@ -1,5 +1,7 @@
 attached_monitor = peripheral.find("monitor")
 
+resetMonitorColors(attached_monitor)
+
 attached_monitor.clear()
 
 -- Check if the monitor was found
@@ -12,13 +14,19 @@ local grid_count_x = 10
 local grid_count_y = 15
 
 local grid_size_x = monitor_size_x / grid_count_x
-local grid_size_y = monitor_size_x / grid_count_y
+local grid_size_y = monitor_size_y / grid_count_y
 
 print(monitor_size_x, monitor_size_y)
+
+function resetMonitorColors(m)
+    m.setBackgroundColor(colors.black)
+end
+
 function drawButton(monitor, x, y, color, button_text)
     term.redirect(monitor)
-    paintutils.drawBox(x, y, x+grid_size_x*3, y + grid_count_y*2, color)
+    paintutils.drawBox(x, y, x+(grid_size_x*2), y + grid_count_y*2, color)
     term.redirect(term.native())
+    resetMonitorColors(monitor)
 end
 
 
