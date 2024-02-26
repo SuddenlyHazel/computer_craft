@@ -1,6 +1,7 @@
 local pretty = require "cc.pretty"
 
 SETTINGS_KEY = "hazel.computer_craft"
+GITHUB_TOKEN = "hazel.github_token"
 
 DEFAULT_SETTING = {
     ["commit_url"] = "https://api.github.com/repos/SuddenlyHazel/computer_craft/commits/main",
@@ -10,8 +11,12 @@ DEFAULT_SETTING = {
     ["boot_program"] = nil,
 }
 
+function getGithubToken()
+    settings.get(GITHUB_TOKEN)
+end
+
 function getHash(url)
-    print(string.format("fetching from %s", url))
+    print(string.format("fetching from   %s", url))
     
     local resp = http.get(url)
     pretty.print(resp)
