@@ -92,6 +92,10 @@ function buildWatchFunction(socket)
             local message = socket.receive()
             local message = textutils.unserializeJSON(message)
 
+            if message == nil then
+                break
+            end
+
             if message["HashUpdated"] ~= nil then
                 local currentHash = message["HashUpdated"]
                 print(string.format("Got updated hash from server %s", currentHash))
@@ -109,9 +113,15 @@ end
 while true do
     print("attempting to open websocket connection..")
     local socket = http.websocket("wss://computer-craft-bridge.hazel.ooo/ws")
+
+    function requestFirstData()
+        socket.send(
+            "\"GetCurrentHash\""
+        )
+    end
     if socket ~= nil then
         local watcher = buildWatchFunction(socket)
-        parallel.waitForAny(watcher)
+        parallel.waitForAll(watcher, requestFirstData)
     else
         print("failed to open socket connection!")
     end
