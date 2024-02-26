@@ -24,8 +24,7 @@ print(monitor_size_x, monitor_size_y)
 print(grid_size_x, grid_size_y)
 
 function textWidth(input_text, m)
-    local char_width = 6
-    return string.len(input_text) * char_width * m.getTextScale()
+    return string.len(input_text) * m.getTextScale()
 end
 
 function drawButton(monitor, x, y, color, text_color, button_text)
@@ -33,10 +32,10 @@ function drawButton(monitor, x, y, color, text_color, button_text)
     print(string.format("text width %s", text_width))
     term.redirect(monitor)
     
-    paintutils.drawFilledBox(x, y, x+string.len(button_text), y + (grid_size_y*2), color)
+    paintutils.drawFilledBox(x, y, x+text_width+1, y + (grid_size_y*2), color)
     resetMonitorColors(monitor)
 
-    monitor.setCursorPos(x, y)
+    monitor.setCursorPos(x+0.5, y)
     monitor.setTextColor(text_color)
     monitor.setBackgroundColor(color)
     monitor.write(button_text)
