@@ -16,7 +16,7 @@ function getGithubToken()
 end
 
 function getHash(url)
-    print(string.format("fetching from %s", url))
+    print(string.format("fetching from... %s", url))
     
     local resp = http.get(url)
     pretty.print(resp)
