@@ -99,6 +99,7 @@ function watchForRepoChanges()
     local config = readConfig()
     local currentHash = getHash(config["commit_url"])
     local lastHash = config["last_commit_hash"]
+    updateSystem(config, currentHash, lastHash)
 end
 
 updateSystem(config, currentHash, lastHash)
