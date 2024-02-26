@@ -15,17 +15,6 @@ function getGithubToken()
     settings.get(GITHUB_TOKEN)
 end
 
-function getHash(url)
-    print(string.format("fetching from.. %s", url))
-
-    local resp = http.get(url)
-    pretty.print(resp)
-    local body = resp.readAll()
-    resp.close()
-    body = textutils.unserialiseJSON(body)
-    return body["sha"]
-end
-
 function readConfig()
     local settingsExists = settings.load()
 
@@ -101,21 +90,36 @@ function updateSystem(config, currentHash, lastHash)
     end
 end
 
-function watchForRepoChanges(socket)
-    local message = socket.receive()
-    local message = textutils.unserializeJSON(message)
+function buildWatchFunction(socket)
+    function watchForRepoChanges()
+        while true do
+            local message = socket.receive()
+            local message = textutils.unserializeJSON(message)
 
-    if message["HashUpdated"] ~= nil then
-        local currentHash = message["HashUpdated"]
-        print(string.format("Got updated hash from server %s", currentHash))
-        local config = readConfig()
-        local lastHash = config["last_commit_hash"]
-        updateSystem(config, currentHash, lastHash)
+            if message["HashUpdated"] ~= nil then
+                local currentHash = message["HashUpdated"]
+                print(string.format("Got updated hash from server %s", currentHash))
+                local config = readConfig()
+                local lastHash = config["last_commit_hash"]
+                updateSystem(config, currentHash, lastHash)
+            end
+        end
+        print("Socket Connection Closed!")
     end
+
+    return watchForRepoChanges
 end
 
 updateSystem(config, currentHash, lastHash)
 
 while true do
-    parallel.waitForAny(watchForRepoChanges)
+    print("attempting to open websocket connection..")
+    local socket = http.websocket("wss://computer-craft-bridge.hazel.ooo/ws")
+    if socket ~= nil then
+        local watcher = buildWatchFunction(socket)
+        parallel.waitForAny(watcher)
+    else
+        print("failed to open socket connection!")
+    end
+    print("restarting main event loop")
 end
