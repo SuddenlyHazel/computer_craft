@@ -20,7 +20,18 @@ function getHash(url)
 end
 
 function readConfig()
-    return settings.get(SETTINGS_KEY, DEFAULT_SETTING)
+    local settingsExists = settings.load()
+
+    local defaultOrExisting = settings.get(SETTINGS_KEY, DEFAULT_SETTING)
+
+    if not settingsExists then
+        print("persisting settings for the first time..")
+        settings.save()
+    else
+        print("found stored settings!")
+    end
+
+    return defaultOrExisting
 end
 
 function getRepoFile(hash, filename)
