@@ -3,6 +3,7 @@
         {
             "name" : "Startup Script",
             "id" : "startup",
+            "alwaysDownload" : true,
             "files" : [
                 "startup.lua"
             ]
@@ -10,6 +11,7 @@
         {
             "name": "Factory GUI",
             "id": "factory_gui",
+            "alwaysDownload" : false,
             "files": [
                 "factory_gui.lua"
             ]

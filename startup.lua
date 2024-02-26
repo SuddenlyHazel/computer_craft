@@ -55,6 +55,7 @@ local lastHash = config["last_commit_hash"]
 
 function updateFiles(hash, bootJson, config)
     local programs = bootJson["programs"]
+    fs.makeDir(hash)
     for _, value in pairs(programs) do
         print(string.format("Fetching program | %s", value["id"]))
         for _, filename in pairs(value["files"]) do
