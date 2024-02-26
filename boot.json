@@ -1,3 +1,11 @@
 {
-    
+    "programs": [
+        {
+            "name": "Factory GUI",
+            "id": "factory_gui",
+            "files": [
+                "factory_gui.lua"
+            ]
+        }
+    ]
 }

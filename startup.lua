@@ -1,3 +1,5 @@
+local pretty = require "cc.pretty"
+
 SETTINGS_KEY = "hazel.computer_craft"
 
 
@@ -24,6 +26,17 @@ end
 function getRepoFile(hash, filename)
 end
 
+function readBootConfig(hash, config)
+    local resp = http.get(string.format(config["repo_url"],
+        hash, config["boot_config"]), {
+        ["Cache-Control"] = "no-store"
+    })
+
+    local body = resp.readAll();
+    resp.close()
+    return textutils.unserialiseJSON(body);
+end
+
 local config = readConfig()
 local currentHash = getHash(config["commit_url"])
 local lastHash = config["last_commit_hash"]
@@ -33,13 +46,6 @@ if lastHash ~= currentHash then
     print(string.format("last_sha: %s, current_sha: %s", lastHash, currentHash))
     print("Fetching boot.json..")
 
-    local resp = http.get(string.format(config["repo_url"],
-        currentHash, config["boot_config"]), {
-        ["Cache-Control"] = "no-store"
-    })
-
-    local body = resp.readAll();
-    print(body)
-    resp.close()
+    local bootJson = readBootConfig(currentHash, readBootConfig)
+    pretty.pretty_print(bootJson)
 end
-
