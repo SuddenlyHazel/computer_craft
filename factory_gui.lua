@@ -32,10 +32,10 @@ function drawButton(monitor, x, y, color, text_color, button_text)
     print(string.format("text width %s", text_width))
     term.redirect(monitor)
     
-    paintutils.drawFilledBox(x, y, x+text_width+1, y + (grid_size_y*2), color)
+    paintutils.drawFilledBox(x, y, x+text_width, y + 1, color)
     resetMonitorColors(monitor)
 
-    monitor.setCursorPos(x+0.5, y)
+    monitor.setCursorPos(x+1, y)
     monitor.setTextColor(text_color)
     monitor.setBackgroundColor(color)
     monitor.write(button_text)
