@@ -106,8 +106,9 @@ function watchForRepoChanges(socket)
     local message = textutils.unserializeJSON(message)
 
     if message["HashUpdated"] ~= nil then
-        local config = readConfig()
         local currentHash = message["HashUpdated"]
+        print(string.format("Got updated hash from server %s", currentHash))
+        local config = readConfig()
         local lastHash = config["last_commit_hash"]
         updateSystem(config, currentHash, lastHash)
     end
