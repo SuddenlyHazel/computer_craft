@@ -8,7 +8,7 @@ if attached_monitor == nil then
 end
 
 local monitor_size_x, monitor_size_y = attached_monitor.getSize()
-
+print(monitor_size_x, monitor_size_y)
 function drawButton(monitor, x, y, color, button_text)
     local old_m = term.redirect(monitor)
     monitor.setCursorPos(x + 2, y + 2)
