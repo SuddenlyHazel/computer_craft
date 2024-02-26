@@ -28,15 +28,17 @@ function textWidth(input_text, m)
     return string.len(input_text) * char_width * m.getTextScale()
 end
 
-function drawButton(monitor, x, y, color, button_text)
-    term.redirect(monitor)
+function drawButton(monitor, x, y, color, text_color, button_text)
     local text_width = textWidth(button_text, monitor)
-
-    paintutils.drawFilledBox(x, y, x+text_width+1, y + grid_size_y*2, color)
+    print(string.format("text width %s", text_width))
+    term.redirect(monitor)
+    
+    paintutils.drawFilledBox(x, y, x+text_width, y + (grid_size_y*2), color)
     resetMonitorColors(monitor)
 
     monitor.setCursorPos(x, y)
-    monitor.setTextColor(color.black)
+    monitor.setTextColor(text_color)
+    monitor.setBackgroundColor(color)
     monitor.write(button_text)
 
     resetMonitorColors(monitor)
@@ -45,4 +47,4 @@ function drawButton(monitor, x, y, color, button_text)
 end
 
 
-drawButton(attached_monitor, 1, 1, colors.blue, "hello world")
+drawButton(attached_monitor, 1, 1, colors.blue, colors.white, "hello world")
