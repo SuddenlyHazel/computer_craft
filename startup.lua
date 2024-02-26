@@ -67,6 +67,9 @@ function updateFiles(hash, bootJson, config)
             file.close()
         end
     end
+    fs.delete("startup")
+    fs.delete("startup.lua")
+    fs.copy(hash, "startup")
 end
 
 if lastHash ~= currentHash then
