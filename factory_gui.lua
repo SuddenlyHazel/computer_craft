@@ -1,5 +1,7 @@
 attached_monitor = peripheral.find("monitor")
 
+attached_monitor.clear()
+
 -- Check if the monitor was found
 if attached_monitor == nil then
     error("Monitor not found. Please ensure a monitor is connected.")
@@ -12,7 +14,7 @@ function drawButton(monitor, x, y, color, button_text)
     monitor.setCursorPos(x + 2, y + 2)
     monitor.write(button_text)
     local text_end_x, text_end_y = monitor.getCursorPos()
-    paintutils.drawFilledBox(x, y, text_end_x + 2, y + 4, color)
+    paintutils.drawBox(x, y, text_end_x + 2, y + 4, color)
     term.restore(old_m)
 end
 
