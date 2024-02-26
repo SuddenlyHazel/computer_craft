@@ -6,6 +6,7 @@ top_sensor = colors.pink
 bottom_sensor = colors.orange
 
 function drive_bulkhead()
+        print("drive bulkhead_0001")
        os.pullEvent("redstone")
 
         local is_at_top = rs.testBundledInput("right", top_sensor)
@@ -22,6 +23,7 @@ function drive_bulkhead()
 end
 
 function listen_for_command()
+    print("drive bulkhead_0001")
     local id, message = rednet.receive("bulkhead_0001")
     print(id, message)
 end
