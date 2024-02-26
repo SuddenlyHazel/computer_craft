@@ -15,7 +15,7 @@ function drawButton(monitor, x, y, color, button_text)
     monitor.write(button_text)
     local text_end_x, text_end_y = monitor.getCursorPos()
     paintutils.drawBox(x, y, text_end_x + 2, y + 4, color)
-    term.restore(old_m)
+    term.redirect(term.native())
 end
 
 
