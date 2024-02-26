@@ -34,6 +34,12 @@ function readConfig()
     return defaultOrExisting
 end
 
+function saveConfig(config)
+    print("Persisting updated config")
+    settings.set(SETTINGS_KEY, config)
+    settings.save()
+end
+
 function getRepoFile(hash, repoUrl, filename)
     local resp = http.get(string.format(repoUrl,
         hash, filename), {
@@ -67,16 +73,24 @@ function updateFiles(hash, bootJson, config)
             file.close()
         end
     end
+
     fs.delete("startup")
     fs.delete("startup.lua")
     fs.copy(hash, "startup")
+    fs.delete(hash)
 end
 
-if lastHash ~= currentHash then
-    print("Repo has been updated")
-    print(string.format("last_sha: %s, current_sha: %s", lastHash, currentHash))
-    print("Fetching boot.json..")
-
-    local bootJson = readBootConfig(currentHash, config)
-    updateFiles(currentHash, bootJson, config)
+function updateSystem(config, currentHash, lastHash)
+    if lastHash ~= currentHash then
+        print("Repo has been updated")
+        print(string.format("last_sha: %s, current_sha: %s", lastHash, currentHash))
+        print("Fetching boot.json..")
+    
+        local bootJson = readBootConfig(currentHash, config)
+        updateFiles(currentHash, bootJson, config)
+        config["last_commit_hash"] = currentHash
+        saveConfig(config)
+    end
 end
+
+updateSystem(config, currentHash, lastHash)
