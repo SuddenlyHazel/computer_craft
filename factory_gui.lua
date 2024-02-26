@@ -21,14 +21,27 @@ local grid_size_x = monitor_size_x / grid_count_x
 local grid_size_y = monitor_size_y / grid_count_y
 
 print(monitor_size_x, monitor_size_y)
+print(grid_size_x, grid_size_y)
 
-
+function textWidth(input_text, m)
+    local char_width = 6
+    return string.len(input_text) * char_width * m.getTextScale()
+end
 
 function drawButton(monitor, x, y, color, button_text)
     term.redirect(monitor)
-    paintutils.drawBox(x, y, x+(grid_size_x*2), y + grid_size_y*2, color)
-    term.redirect(term.native())
+    local text_width = textWidth(button_text, monitor)
+
+    paintutils.drawFilledBox(x, y, x+text_width+1, y + grid_size_y*2, color)
     resetMonitorColors(monitor)
+
+    monitor.setCursorPos(x, y)
+    monitor.setTextColor(color.black)
+    monitor.write(button_text)
+
+    resetMonitorColors(monitor)
+
+    term.redirect(term.native())
 end
 
 
