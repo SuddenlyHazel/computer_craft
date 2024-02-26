@@ -61,6 +61,10 @@ function updateFiles(hash, bootJson, config)
         for _, filename in pairs(value["files"]) do
             print(string.format("       fetching file %s", filename))
             local progFile = getRepoFile(hash, config["repo_url"], filename)
+            local path = fs.combine("/"+hash, filename)
+            local file = fs.open(path, "w")
+            file.write(progFile)
+            file.close()
         end
     end
 end
