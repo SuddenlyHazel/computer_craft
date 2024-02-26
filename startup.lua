@@ -51,10 +51,6 @@ function readBootConfig(hash, config)
     return textutils.unserialiseJSON(getRepoFile(hash, config["repo_url"], config["boot_config"]));
 end
 
-local config = readConfig()
-local currentHash = getHash(config["commit_url"])
-local lastHash = config["last_commit_hash"]
-
 function updateFiles(hash, bootJson, config)
     local startupPrograms = bootJson["startup"]
     fs.makeDir(hash)
@@ -109,8 +105,6 @@ function buildWatchFunction(socket)
 
     return watchForRepoChanges
 end
-
-updateSystem(config, currentHash, lastHash)
 
 while true do
     print("attempting to open websocket connection..")
