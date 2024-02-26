@@ -1,17 +1,17 @@
 {
-    "programs": [
+    "startup": [
         {
             "name" : "Startup Script",
             "id" : "startup",
-            "alwaysDownload" : true,
             "files" : [
                 "startup.lua"
             ]
-        },
+        }
+    ],
+    "programs": [
         {
             "name": "Factory GUI",
             "id": "factory_gui",
-            "alwaysDownload" : false,
             "files": [
                 "factory_gui.lua"
             ]
