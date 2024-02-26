@@ -93,4 +93,16 @@ function updateSystem(config, currentHash, lastHash)
     end
 end
 
+function watchForRepoChanges()
+    os.sleep(5)
+    print("Checking for updates..")
+    local config = readConfig()
+    local currentHash = getHash(config["commit_url"])
+    local lastHash = config["last_commit_hash"]
+end
+
 updateSystem(config, currentHash, lastHash)
+
+while true do
+    parallel.waitForAny(watchForRepoChanges)
+end
