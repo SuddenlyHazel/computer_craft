@@ -11,14 +11,15 @@ function drive_bulkhead()
 
         local is_at_top = rs.testBundledInput("right", top_sensor)
         local is_at_bottom = rs.testBundledInput("right", bottom_sensor)
+        local is_going_up = rs.testBundledInput("right", gear_shift)
 
         print(is_at_top, is_at_bottom)
 
-        if is_at_top then
-            local output = colors.combine(clutch)
+        if is_at_top and is_going_up then
+            local output = colors.combine(colors.subtract(clutch, gear_shift))
             rs.setBundledOutput("right", clutch)
-        elseif is_at_bottom then
-            rs.setBundledOutput("right", clutch)
+        elseif is_at_bottom and not is_going_up then
+            rs.setBundledOutput("right", colors.combine(clutch, gear_shift))
         end
 end
 
