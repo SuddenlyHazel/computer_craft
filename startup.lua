@@ -17,7 +17,7 @@ end
 
 function getHash(url)
     print(string.format("fetching from.. %s", url))
-    
+
     local resp = http.get(url)
     pretty.print(resp)
     local body = resp.readAll()
@@ -101,13 +101,16 @@ function updateSystem(config, currentHash, lastHash)
     end
 end
 
-function watchForRepoChanges()
-    os.sleep(5)
-    print("Checking for updates..")
-    local config = readConfig()
-    local currentHash = getHash(config["commit_url"])
-    local lastHash = config["last_commit_hash"]
-    updateSystem(config, currentHash, lastHash)
+function watchForRepoChanges(socket)
+    local message = socket.receive()
+    local message = textutils.unserializeJSON(message)
+
+    if message["HashUpdated"] ~= nil then
+        local config = readConfig()
+        local currentHash = message["HashUpdated"]
+        local lastHash = config["last_commit_hash"]
+        updateSystem(config, currentHash, lastHash)
+    end
 end
 
 updateSystem(config, currentHash, lastHash)
