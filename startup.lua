@@ -90,6 +90,7 @@ function updateSystem(config, currentHash, lastHash)
         updateFiles(currentHash, bootJson, config)
         config["last_commit_hash"] = currentHash
         saveConfig(config)
+        os.reboot()
     end
 end
 
