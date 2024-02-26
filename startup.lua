@@ -46,6 +46,6 @@ if lastHash ~= currentHash then
     print(string.format("last_sha: %s, current_sha: %s", lastHash, currentHash))
     print("Fetching boot.json..")
 
-    local bootJson = readBootConfig(currentHash, readBootConfig)
+    local bootJson = readBootConfig(currentHash, config)
     pretty.pretty_print(bootJson)
 end
