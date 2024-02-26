@@ -24,10 +24,12 @@ end
 
 function listen_for_command()
     print("drive bulkhead_0001")
+    local current_output = rs.getBundledOutput("right")
+
     local is_at_top = rs.testBundledInput("right", top_sensor)
-    
+
     local id, message = rednet.receive("bulkhead_0001")
-    rs.setBundledOutput("right", colors.subtract(clutch))
+    rs.setBundledOutput("right", colors.subtract(current_output, clutch))
 end
 
 while true do
