@@ -1,13 +1,13 @@
 attached_monitor = peripheral.find("monitor")
 
-resetMonitorColors(attached_monitor)
-
-attached_monitor.clear()
-
 -- Check if the monitor was found
 if attached_monitor == nil then
     error("Monitor not found. Please ensure a monitor is connected.")
 end
+
+resetMonitorColors(attached_monitor)
+
+attached_monitor.clear()
 
 local monitor_size_x, monitor_size_y = attached_monitor.getSize()
 local grid_count_x = 10
