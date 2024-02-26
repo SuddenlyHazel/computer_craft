@@ -11,7 +11,10 @@ DEFAULT_SETTING = {
 }
 
 function getHash(url)
+    print(string.format("fetching from %s", url))
+    
     local resp = http.get(url)
+    pretty.print(resp)
     local body = resp.readAll()
     resp.close()
     body = textutils.unserialiseJSON(body)
@@ -59,9 +62,9 @@ local currentHash = getHash(config["commit_url"])
 local lastHash = config["last_commit_hash"]
 
 function updateFiles(hash, bootJson, config)
-    local programs = bootJson["startup"]
+    local startupPrograms = bootJson["startup"]
     fs.makeDir(hash)
-    for _, value in pairs(programs) do
+    for _, value in pairs(startupPrograms) do
         print(string.format("Fetching program | %s", value["id"]))
         for _, filename in pairs(value["files"]) do
             print(string.format("       fetching file %s", filename))
