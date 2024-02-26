@@ -26,7 +26,7 @@ print(monitor_size_x, monitor_size_y)
 
 function drawButton(monitor, x, y, color, button_text)
     term.redirect(monitor)
-    paintutils.drawBox(x, y, x+(grid_size_x*2), y + grid_count_y*2, color)
+    paintutils.drawBox(x, y, x+(grid_size_x*2), y + grid_size_y*2, color)
     term.redirect(term.native())
     resetMonitorColors(monitor)
 end
