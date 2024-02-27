@@ -9,13 +9,8 @@ DEFAULT_SETTING = {
     ["last_commit_hash"] = "",
     ["boot_config"] = "boot.json",
     ["boot_program"] = nil,
+    ["programs"] = {},
 }
-
--- Returns the list of programs stored in config to run
-function getProgramList()
-    settings.load(SETTINGS_KEY)
-    settings.get(SETTINGS_KEY, {})
-end
 
 function getGithubToken()
     settings.get(GITHUB_TOKEN)
@@ -33,6 +28,8 @@ function readConfig()
         print("found stored settings!")
     end
 
+    migrateConfig(defaultOrExisting)
+    settings.save()
     return defaultOrExisting
 end
 
@@ -81,8 +78,12 @@ function updateFiles(hash, bootJson, config)
     -- Download all program files and write them to disk
     local programsDir = string.format("%s_programs", hash)
     fs.makeDir(programsDir)
+    config["programs"] = {}
     for _, value in pairs(bootJson["programs"]) do
-        print(string.format(":: Fetching program | %s", value["id"]))
+        local programId = value["id"];
+
+        print(string.format(":: Fetching program | %s", programId))
+
         for _, filename in pairs(value["files"]) do
             print(string.format("       :: fetching file %s", filename))
             local progFile = getRepoFile(hash, config["repo_url"], filename)
@@ -92,9 +93,11 @@ function updateFiles(hash, bootJson, config)
             file.close()
         end
         local startFile = bootJson["startFile"]
-        shell.setAlias(value["id"], fs.combine("/", "programs", startFile))
+        config["programs"][programId] = {
+            ["startfile"] = startFile,
+        }
     end
-    
+
     fs.delete("programs")
     fs.copy(programsDir, "programs")
     fs.delete(programsDir)
@@ -142,8 +145,32 @@ function buildWatchFunction(socket)
     return watchForRepoChanges
 end
 
-function runLocalPrograms(config)
+function readRequestedProgramsList()
+    settings.load("PROGRAMS_KEY")
+    return settings.get("PROGRAMS_KEY", {})
+end
 
+function runLocalPrograms()
+    local config = readConfig()
+    local requestedPrograms = readRequestedProgramsList()
+
+    function run_program(progPath)
+        return function() 
+            local status, result = pcall(shell.run, progPath)
+            if not status then
+                print(string.format("Program %s failed Error %s", progPath, result))
+            end
+        end
+    end
+
+    local programs = {}
+    for i, name in ipairs(requestedPrograms) do
+        local programMaybe = config["programs"][name]
+        if programMaybe ~= nil then
+            programs[i] =
+            print("attempting to start ", name)
+        end
+    end
 end
 
 while true do
