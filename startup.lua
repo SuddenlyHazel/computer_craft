@@ -15,6 +15,10 @@ DEFAULT_SETTING = {
     ["programs"] = {},
 }
 
+function serverName()
+    settings.get(SERVER_NAME_KEY)
+end
+
 FIRST_CHECK_DONE = false
 
 function getGithubToken()
@@ -110,6 +114,7 @@ function updateFiles(hash, bootJson, config)
     local startupPrograms = bootJson["deployments"]
     local serverName = settings.get(SERVER_NAME_KEY)
     if serverName and startupPrograms[serverName] then
+        print("Found requested programs to run on this server")
         config[SERVER_PROGRAMS_KEY] = startupPrograms[serverName]["programs"]
     end
 end
@@ -163,6 +168,7 @@ function readRequestedProgramsList()
 end
 
 function runLocalPrograms()
+    print(string.format("Server Name %s", serverName()))
     while not FIRST_CHECK_DONE do
         print("waiting for first check to finish..")
         sleep(1)
