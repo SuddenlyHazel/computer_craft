@@ -13,25 +13,22 @@ currentState = nil
 
 IS_RUNNING = false
 
-function runAlarm()
-    local event = os.pullEvent("bulkhead_started")
-    print(event)
-    speaker.playSound(ALARM)
+function playSound()
     while true do
-        local event = os.pullEvent("bulkhead_stopped", "speaker_audio_empty")
-        print(event)
-        if event == "speaker_audio_empty" then
-            speaker.playSound(ALARM)
-        else
-            return runAlarm()
-        end
+        speaker.playSound(ALARM, 3)
+        os.pullEvent("speaker_audio_empty")
+    end
+end
+
+function runAlarm()
+    while true do
+        local event = os.pullEvent("bulkhead_started")
+        parallel.waitForAny(function() os.pullEvent("bulkhead_stopped") end, playSound)
     end
 end
 
 function drive_bulkhead()
     os.pullEvent("redstone")
-
-    local running = false;
 
     local is_at_top = rs.testBundledInput(cable_input, topSensor)
     local is_at_bottom = rs.testBundledInput(cable_input, bottomSensor)
@@ -47,13 +44,13 @@ function drive_bulkhead()
 end
 
 function listen_for_command()
-    print("drive bulkhead_0001")
-    local current_output = rs.getBundledOutput(cable_input)
-
-    local id, message = rednet.receive("bulkhead_0001")
-    os.queueEvent("bulkhead_started", {})
-    sleep(1)
-    rs.setBundledOutput(cable_input, colors.subtract(current_output, clutch))
+    while true do
+        print("drive bulkhead_0001")
+        local id, message = rednet.receive("bulkhead_0001")
+        local current_output = rs.getBundledOutput(cable_input)
+        os.queueEvent("bulkhead_started", {})
+        rs.setBundledOutput(cable_input, colors.subtract(current_output, clutch))
+    end
 end
 
 while true do
