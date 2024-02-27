@@ -16,7 +16,7 @@ IS_RUNNING = false
 function playSound()
     while true do
         speaker.playSound(ALARM, 3)
-        sleep(1.8)
+        sleep(1.6)
     end
 end
 
