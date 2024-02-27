@@ -1,3 +1,5 @@
+require(".common.log")
+
 attached_monitor = peripheral.find("monitor")
 
 -- Check if the monitor was found
