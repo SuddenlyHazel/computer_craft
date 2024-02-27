@@ -90,11 +90,12 @@ function buildWatchFunction(socket)
     function watchForRepoChanges()
         while true do
             local message = socket.receive()
-            local message = textutils.unserializeJSON(message)
-
+            
             if message == nil then
                 break
             end
+            
+            local message = textutils.unserializeJSON(message)
 
             if message["HashUpdated"] ~= nil then
                 local currentHash = message["HashUpdated"]
