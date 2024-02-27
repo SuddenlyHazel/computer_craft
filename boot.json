@@ -4,7 +4,7 @@
             "name" : "Startup Script",
             "id" : "startup",
             "files" : [
-                "startup.lua",
+                "startup.lua"
             ]
         }
     ],
