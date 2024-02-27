@@ -31,14 +31,14 @@ end
 
 function drawButton(monitor, x, y, color, text_color, button_text)
     local text_width = textWidth(button_text, monitor)
-    local xEnd =  x+text_width+2
-    
+    local xEnd = x + text_width + 2
+
     local function draw()
         term.redirect(monitor)
         paintutils.drawFilledBox(x, y, xEnd, y, color)
         resetMonitorColors(monitor)
 
-        monitor.setCursorPos(x+1, y)
+        monitor.setCursorPos(x + 1, y)
         monitor.setTextColor(text_color)
         monitor.setBackgroundColor(color)
         monitor.write(button_text)
@@ -47,21 +47,26 @@ function drawButton(monitor, x, y, color, text_color, button_text)
 
         term.redirect(term.native())
     end
-    
+
     local function hitTest(x0, y0)
         -- x,y   xEnd, y
         -- x,y   xEnd, yEnd
         return x0 >= x and x0 <= xEnd and y0 == y
     end
 
-    return {[hitTest] = hitTest, [draw] = draw}
+    return { hitTest = hitTest, draw = draw }
 end
 
-local button = drawButton(attached_monitor, 1, 3, colors.blue, colors.white, "testing world again")
-button.draw()
+local buttonOne = drawButton(attached_monitor, 1, 3, colors.blue, colors.white, "testing world again")
+buttonOne.draw()
+
+local buttonTwo = drawButton(attached_monitor, 1, 4, colors.blue, colors.white, "testing world here")
+buttonTwo.draw()
+
 
 while true do
     local event, side, x, y = os.pullEvent("monitor_touch")
     print("The monitor on side " .. side .. " was touched at (" .. x .. ", " .. y .. ")")
-    print(button.hitTest(x, y))
-  end
+    print(buttonOne.hitTest(x, y))
+    print(buttonTwo.hitTest(x, y))
+end
