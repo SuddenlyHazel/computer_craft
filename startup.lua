@@ -92,7 +92,7 @@ function updateFiles(hash, bootJson, config)
             file.write(progFile)
             file.close()
         end
-        local startFile = bootJson["startFile"]
+        local startFile = value["startFile"]
         config["programs"][programId] = {
             ["startfile"] = startFile,
         }
