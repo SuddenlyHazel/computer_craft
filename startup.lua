@@ -118,6 +118,7 @@ function updateSystem(config, currentHash, lastHash)
     else
         pretty.print(pretty.text("No updates", colors.blue))
     end
+    FIRST_CHECK_DONE = true
 end
 
 function buildWatchFunction(socket)
@@ -152,7 +153,7 @@ function readRequestedProgramsList()
 end
 
 function runLocalPrograms()
-    while ~FIRST_CHECK_DONE do
+    while not FIRST_CHECK_DONE do
         print("waiting for first check to finish..")
         sleep(1)
     end
