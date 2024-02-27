@@ -31,18 +31,11 @@ function textWidth(input_text, m)
     return string.len(input_text) * m.getTextScale()
 end
 
-local buttonOne = buttons.drawButton(attached_monitor, 1, 3, colors.blue, colors.white, "testing world again",
+local buttonOne = buttons.drawButton(attached_monitor, 1, 3, colors.blue, colors.white, "toggle bulkhead",
     function()
-        print("button one hit")
         rednet.broadcast({}, "bulkhead_0001")
     end)
 buttonOne.draw()
-
-local buttonTwo = buttons.drawButton(attached_monitor, 1, 4, colors.lightBlue, colors.white, "testing world here",
-    function() print("button two hit") end
-)
-buttonTwo.draw()
-
 
 while true do
     local event, side, x, y = os.pullEvent("monitor_touch")
