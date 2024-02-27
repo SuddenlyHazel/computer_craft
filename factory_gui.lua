@@ -46,4 +46,4 @@ function drawButton(monitor, x, y, color, text_color, button_text)
 end
 
 
-drawButton(attached_monitor, 1, 1, colors.blue, colors.white, "testing world")
+drawButton(attached_monitor, 1, 1, colors.blue, colors.white, "testing world again")
