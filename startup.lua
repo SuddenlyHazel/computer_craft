@@ -27,8 +27,7 @@ function readConfig()
     else
         print("found stored settings!")
     end
-
-    migrateConfig(defaultOrExisting)
+    
     settings.save()
     return defaultOrExisting
 end
