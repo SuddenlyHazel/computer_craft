@@ -173,6 +173,7 @@ function runLocalPrograms()
     local requestedPrograms = config[SERVER_PROGRAMS_KEY]
     print("starting the following..")
     pretty.pretty_print(requestedPrograms)
+
     function run_program(progPath)
         return function() 
             local status, result = pcall(shell.run, progPath)
@@ -181,7 +182,6 @@ function runLocalPrograms()
             end
         end
     end
-    if true then return false end
 
     local programs = {}
     for i, name in ipairs(requestedPrograms) do
@@ -194,6 +194,8 @@ function runLocalPrograms()
             else
                 print("File doesn't exist ", path)
             end
+        else
+            print(string.format("failed to find programe %s", name))
         end
     end
 
