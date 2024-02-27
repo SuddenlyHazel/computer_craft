@@ -16,5 +16,10 @@
                 "factory_gui.lua"
             ]
         }
-    ]
+    ],
+    "deployments" : {
+        "warehouse" : {
+            "programs" : ["factory_gui"] 
+        }
+    }
 }

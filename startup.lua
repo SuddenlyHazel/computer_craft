@@ -1,6 +1,8 @@
 local pretty = require "cc.pretty"
 
 SETTINGS_KEY = "hazel.computer_craft"
+SERVER_NAME_KEY = "hazel.computer_craft.name"
+SERVER_PROGRAMS_KEY = "hazel.computer_craft.toRun"
 GITHUB_TOKEN = "hazel.github_token"
 
 DEFAULT_SETTING = {
@@ -89,6 +91,13 @@ function updateFiles(hash, bootJson, config)
     fs.delete("programs")
     fs.copy(programsDir, "programs")
     fs.delete(programsDir)
+
+    -- Load any requested programs to be run on this pc
+    local startupPrograms = bootJson["deployments"]
+    local serverName = settings.get(SERVER_NAME_KEY)
+    if serverName and startupPrograms[serverName] then
+        config[SERVER_PROGRAMS_KEY] = startupPrograms[serverName]["programs"]
+    end
 end
 
 function updateSystem(config, currentHash, lastHash)
