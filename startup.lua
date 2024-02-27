@@ -1,5 +1,4 @@
 local pretty = require "cc.pretty"
-local log = require(".common.log")
 
 SETTINGS_KEY = "hazel.computer_craft"
 SERVER_NAME_KEY = "hazel.computer_craft.name"
