@@ -4,6 +4,7 @@ SETTINGS_KEY = "hazel.computer_craft"
 SERVER_NAME_KEY = "hazel.computer_craft.name"
 SERVER_PROGRAMS_KEY = "hazel.computer_craft.toRun"
 GITHUB_TOKEN = "hazel.github_token"
+PROGRAMS_KEY = "hazel.computer_craft.programs"
 
 DEFAULT_SETTING = {
     ["commit_url"] = "https://api.github.com/repos/SuddenlyHazel/computer_craft/commits/main",
@@ -11,7 +12,10 @@ DEFAULT_SETTING = {
     ["last_commit_hash"] = "",
     ["boot_config"] = "boot.json",
     ["boot_program"] = nil,
+    ["programs"] = {},
 }
+
+FIRST_CHECK_DONE = false
 
 function getGithubToken()
     settings.get(GITHUB_TOKEN)
@@ -29,6 +33,7 @@ function readConfig()
         print("found stored settings!")
     end
 
+    settings.save()
     return defaultOrExisting
 end
 
@@ -75,10 +80,14 @@ function updateFiles(hash, bootJson, config)
     fs.delete(hash)
 
     -- Download all program files and write them to disk
-    local programsDir = string.format("%s_programs")
+    local programsDir = string.format("%s_programs", hash)
     fs.makeDir(programsDir)
+    config["programs"] = {}
     for _, value in pairs(bootJson["programs"]) do
-        print(string.format(":: Fetching program | %s", value["id"]))
+        local programId = value["id"];
+
+        print(string.format(":: Fetching program | %s", programId))
+
         for _, filename in pairs(value["files"]) do
             print(string.format("       :: fetching file %s", filename))
             local progFile = getRepoFile(hash, config["repo_url"], filename)
@@ -87,7 +96,12 @@ function updateFiles(hash, bootJson, config)
             file.write(progFile)
             file.close()
         end
+        local startFile = value["startFile"]
+        config["programs"][programId] = {
+            ["startFile"] = startFile,
+        }
     end
+
     fs.delete("programs")
     fs.copy(programsDir, "programs")
     fs.delete(programsDir)
@@ -114,6 +128,7 @@ function updateSystem(config, currentHash, lastHash)
     else
         pretty.print(pretty.text("No updates", colors.blue))
     end
+    FIRST_CHECK_DONE = true
 end
 
 function buildWatchFunction(socket)
@@ -142,8 +157,47 @@ function buildWatchFunction(socket)
     return watchForRepoChanges
 end
 
-function runLocalPrograms(config)
+function readRequestedProgramsList()
+    settings.load("PROGRAMS_KEY")
+    return settings.get("PROGRAMS_KEY", {})
+end
 
+function runLocalPrograms()
+    while not FIRST_CHECK_DONE do
+        print("waiting for first check to finish..")
+        sleep(1)
+    end
+
+    print("first check done! Continuing to start programs")
+
+    local config = readConfig()
+    local requestedPrograms = config[SERVER_PROGRAMS_KEY]
+
+    function run_program(progPath)
+        return function() 
+            local status, result = pcall(shell.run, progPath)
+            if not status then
+                print(string.format("Program %s failed Error %s", progPath, result))
+            end
+        end
+    end
+    if true then return false end
+
+    local programs = {}
+    for i, name in ipairs(requestedPrograms) do
+        local programMaybe = config["programs"][name]
+        if programMaybe ~= nil then
+            local path = fs.combine("programs", programMaybe["startFile"])
+            if fs.exists(path) then
+                print("Packing function for path ", path)
+                programs[i] = run_program(path)
+            else
+                print("File doesn't exist ", path)
+            end
+        end
+    end
+
+    parallel.waitForAll(table.unpack(programs))
 end
 
 while true do
@@ -158,7 +212,7 @@ while true do
 
     if socket ~= nil then
         local watcher = buildWatchFunction(socket)
-        parallel.waitForAll(watcher, requestFirstData)
+        parallel.waitForAll(watcher, requestFirstData, runLocalPrograms)
     else
         print("failed to open socket connection!")
     end
