@@ -46,12 +46,19 @@ function drawButton(monitor, x, y, color, text_color, button_text)
     resetMonitorColors(monitor)
 
     term.redirect(term.native())
+
+    return function(x0, y0)
+        -- x,y   xEnd, y
+        -- x,y   xEnd, yEnd
+        return x0 >= x and x0 <= xEnd and y0 == y
+    end
 end
 
 
-drawButton(attached_monitor, 1, 3, colors.blue, colors.white, "testing world again")
+local hitTest = drawButton(attached_monitor, 1, 3, colors.blue, colors.white, "testing world again")
 
 while true do
     local event, side, x, y = os.pullEvent("monitor_touch")
     print("The monitor on side " .. side .. " was touched at (" .. x .. ", " .. y .. ")")
+    print(hitTest(x, y))
   end
