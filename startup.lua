@@ -52,10 +52,11 @@ function readBootConfig(hash, config)
 end
 
 function updateFiles(hash, bootJson, config)
+    -- Download all startupPrograms and write them to disk
     local startupPrograms = bootJson["startup"]
     fs.makeDir(hash)
     for _, value in pairs(startupPrograms) do
-        print(string.format(":: Fetching program | %s", value["id"]))
+        print(string.format(":: Fetching Startup program | %s", value["id"]))
         for _, filename in pairs(value["files"]) do
             print(string.format("       :: fetching file %s", filename))
             local progFile = getRepoFile(hash, config["repo_url"], filename)
@@ -70,6 +71,24 @@ function updateFiles(hash, bootJson, config)
     fs.delete("startup.lua")
     fs.copy(hash, "startup")
     fs.delete(hash)
+
+    -- Download all program files and write them to disk
+    local programsDir = string.format("%s_programs")
+    fs.makeDir(programsDir)
+    for _, value in pairs(bootJson["programs"]) do
+        print(string.format(":: Fetching program | %s", value["id"]))
+        for _, filename in pairs(value["files"]) do
+            print(string.format("       :: fetching file %s", filename))
+            local progFile = getRepoFile(hash, config["repo_url"], filename)
+            local path = fs.combine("/", programsDir, filename)
+            local file = fs.open(path, "w")
+            file.write(progFile)
+            file.close()
+        end
+    end
+    fs.delete("programs")
+    fs.copy(programsDir, "programs")
+    fs.delete(programsDir)
 end
 
 function updateSystem(config, currentHash, lastHash)
@@ -112,6 +131,10 @@ function buildWatchFunction(socket)
     end
 
     return watchForRepoChanges
+end
+
+function runLocalPrograms(config)
+
 end
 
 while true do
