@@ -2,6 +2,7 @@ require(".common.log")
 local buttons = require(".common.gui.buttons")
 
 attached_monitor = peripheral.find("monitor")
+peripheral.find("modem", rednet.open)
 
 -- Check if the monitor was found
 if attached_monitor == nil then
@@ -31,7 +32,10 @@ function textWidth(input_text, m)
 end
 
 local buttonOne = buttons.drawButton(attached_monitor, 1, 3, colors.blue, colors.white, "testing world again",
-    function() print("button one hit") end)
+    function()
+        print("button one hit")
+        rednet.broadcast({}, "bulkhead_0001")
+    end)
 buttonOne.draw()
 
 local buttonTwo = buttons.drawButton(attached_monitor, 1, 4, colors.lightBlue, colors.white, "testing world here",

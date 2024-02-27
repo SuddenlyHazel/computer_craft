@@ -21,7 +21,7 @@ local function drawButton(monitor, x, y, color, text_color, button_text, cb)
         -- x,y   xEnd, y
         -- x,y   xEnd, yEnd
         local isHit = x0 >= x and x0 <= xEnd and y0 == y
-        if cb and isHit then
+        if type(cb) == "function" and isHit then
             cb()
         end
         return isHit
