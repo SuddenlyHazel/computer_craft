@@ -34,7 +34,8 @@ function drawButton(monitor, x, y, color, text_color, button_text)
     print(string.format("text width %s", text_width))
     term.redirect(monitor)
     
-    paintutils.drawFilledBox(x, y, x+text_width+2, y, color)
+    local xEnd =  x+text_width+2
+    paintutils.drawFilledBox(x, y, xEnd, y, color)
     resetMonitorColors(monitor)
 
     monitor.setCursorPos(x+1, y)
@@ -45,6 +46,7 @@ function drawButton(monitor, x, y, color, text_color, button_text)
     resetMonitorColors(monitor)
 
     term.redirect(term.native())
+    
 end
 
 

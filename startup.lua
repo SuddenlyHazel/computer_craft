@@ -191,7 +191,7 @@ function runLocalPrograms()
 
     function run_program(progPath)
         return function()
-            local status, result = pcall(shell.run, progPath)
+            local status, result = pcall(multishell.launch, {}, progPath)
             if not status then
                 print(string.format("Program %s failed Error %s", progPath, result))
             end
