@@ -12,6 +12,8 @@ DEFAULT_SETTING = {
     ["programs"] = {},
 }
 
+FIRST_CHECK_DONE = false
+
 function getGithubToken()
     settings.get(GITHUB_TOKEN)
 end
@@ -150,6 +152,13 @@ function readRequestedProgramsList()
 end
 
 function runLocalPrograms()
+    while ~FIRST_CHECK_DONE do
+        print("waiting for first check to finish..")
+        sleep(1)
+    end
+
+    print("first check done! Continuing to start programs")
+
     local config = readConfig()
     local requestedPrograms = readRequestedProgramsList()
 
@@ -191,7 +200,7 @@ while true do
 
     if socket ~= nil then
         local watcher = buildWatchFunction(socket)
-        parallel.waitForAll(watcher, requestFirstData)
+        parallel.waitForAll(watcher, requestFirstData, runLocalPrograms)
     else
         print("failed to open socket connection!")
     end
