@@ -27,7 +27,7 @@ function readConfig()
     else
         print("found stored settings!")
     end
-    
+
     settings.save()
     return defaultOrExisting
 end
@@ -93,7 +93,7 @@ function updateFiles(hash, bootJson, config)
         end
         local startFile = value["startFile"]
         config["programs"][programId] = {
-            ["startfile"] = startFile,
+            ["startFile"] = startFile,
         }
     end
 
@@ -166,10 +166,17 @@ function runLocalPrograms()
     for i, name in ipairs(requestedPrograms) do
         local programMaybe = config["programs"][name]
         if programMaybe ~= nil then
-            programs[i] =
-            print("attempting to start ", name)
+            local path = fs.combine("programs", programMaybe["startFile"])
+            if fs.exists(path) then
+                print("Packing function for path ", path)
+                programs[i] = run_program(path)
+            else
+                print("File doesn't exist ", path)
+            end
         end
     end
+
+    parallel.waitForAll(table.unpack(programs))
 end
 
 while true do
