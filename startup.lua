@@ -193,7 +193,7 @@ function runLocalPrograms()
         return function()
             local status, result = pcall(shell.run, progPath)
             if not status then
-                printError(string.format("Program %s failed Error %s", progPath, result))
+                print(string.format("Program %s failed Error %s", progPath, result))
             end
         end
     end
@@ -227,9 +227,16 @@ while true do
         )
     end
 
+    function keepWatcherAlive()
+        while true do
+            local watcher = buildWatchFunction(socket)
+            watcher()
+            socket = http.websocket("wss://computer-craft-bridge.hazel.ooo/ws")
+        end 
+    end
+
     if socket ~= nil then
-        local watcher = buildWatchFunction(socket)
-        parallel.waitForAll(watcher, requestFirstData, runLocalPrograms)
+        parallel.waitForAll(keepWatcherAlive, requestFirstData, runLocalPrograms)
     else
         printError("failed to open socket connection!")
     end
