@@ -73,7 +73,7 @@ function updateFiles(hash, bootJson, config)
     fs.delete(hash)
 
     -- Download all program files and write them to disk
-    local programsDir = string.format("%s_programs")
+    local programsDir = string.format("%s_programs", hash)
     fs.makeDir(programsDir)
     for _, value in pairs(bootJson["programs"]) do
         print(string.format(":: Fetching program | %s", value["id"]))
