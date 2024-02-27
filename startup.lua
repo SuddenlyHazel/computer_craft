@@ -156,14 +156,9 @@ end
 
 function buildWatchFunction(socket)
     return function()
-        while true do
-            local message = socket.receive()
-
-            if message == nil then
-                break
-            end
-
-            local message = textutils.unserializeJSON(message)
+        local message = socket.receive()
+        while message ~= nil do
+            message = textutils.unserializeJSON(message)
 
             if message["HashUpdated"] ~= nil then
                 local currentHash = message["HashUpdated"]
@@ -172,6 +167,8 @@ function buildWatchFunction(socket)
                 local lastHash = config["last_commit_hash"]
                 updateSystem(config, currentHash, lastHash)
             end
+
+            message = socket.receive()
         end
 
         printError("Socket Connection Closed!")
