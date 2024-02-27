@@ -110,6 +110,23 @@ function updateFiles(hash, bootJson, config)
     fs.copy(programsDir, "programs")
     fs.delete(programsDir)
 
+    -- Download all common files and write them to disk
+    local commonDir = string.format("%s_common", hash)
+    fs.makeDir(commonDir)
+    for _, value in pairs(bootJson["common"]) do
+        print(string.format(":: Fetching common | %s", value))
+
+        local progFile = getRepoFile(hash, config["repo_url"], value)
+        local path = fs.combine("/", commonDir, value)
+        local file = fs.open(path, "w")
+        file.write(progFile)
+        file.close()
+    end
+
+    fs.delete("common")
+    fs.copy(commonDir, "common")
+    fs.delete(commonDir)
+
     -- Load any requested programs to be run on this pc
     local startupPrograms = bootJson["deployments"]
     local serverName = settings.get(SERVER_NAME_KEY)
@@ -156,7 +173,7 @@ function buildWatchFunction(socket)
             end
         end
 
-        print("Socket Connection Closed!")
+        printError("Socket Connection Closed!")
     end
 end
 
@@ -175,7 +192,7 @@ function runLocalPrograms()
     pretty.pretty_print(requestedPrograms)
 
     function run_program(progPath)
-        return function() 
+        return function()
             local status, result = pcall(shell.run, progPath)
             if not status then
                 print(string.format("Program %s failed Error %s", progPath, result))
@@ -195,7 +212,7 @@ function runLocalPrograms()
                 print("File doesn't exist ", path)
             end
         else
-            print(string.format("failed to find programe %s", name))
+            printError(string.format("failed to find programe %s", name))
         end
     end
 
@@ -216,7 +233,7 @@ while true do
         local watcher = buildWatchFunction(socket)
         parallel.waitForAll(watcher, requestFirstData, runLocalPrograms)
     else
-        print("failed to open socket connection!")
+        printError("failed to open socket connection!")
     end
     print("restarting main event loop")
 end

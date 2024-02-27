@@ -4,9 +4,12 @@
             "name" : "Startup Script",
             "id" : "startup",
             "files" : [
-                "startup.lua"
+                "startup.lua",
             ]
         }
+    ],
+    "common" : [
+        "log.lua"
     ],
     "programs": [
         {
