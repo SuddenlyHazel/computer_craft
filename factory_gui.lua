@@ -29,7 +29,7 @@ function textWidth(input_text, m)
     return string.len(input_text) * m.getTextScale()
 end
 
-function drawButton(monitor, x, y, color, text_color, button_text)
+function drawButton(monitor, x, y, color, text_color, button_text, cb)
     local text_width = textWidth(button_text, monitor)
     local xEnd = x + text_width + 2
 
@@ -51,16 +51,23 @@ function drawButton(monitor, x, y, color, text_color, button_text)
     local function hitTest(x0, y0)
         -- x,y   xEnd, y
         -- x,y   xEnd, yEnd
-        return x0 >= x and x0 <= xEnd and y0 == y
+        local isHit = x0 >= x and x0 <= xEnd and y0 == y
+        if cb and isHit then
+            cb()
+        end
+        return isHit
     end
 
     return { hitTest = hitTest, draw = draw }
 end
 
-local buttonOne = drawButton(attached_monitor, 1, 3, colors.blue, colors.white, "testing world again")
+local buttonOne = drawButton(attached_monitor, 1, 3, colors.blue, colors.white, "testing world again",
+    function() print("button one hit") end)
 buttonOne.draw()
 
-local buttonTwo = drawButton(attached_monitor, 1, 4, colors.blue, colors.white, "testing world here")
+local buttonTwo = drawButton(attached_monitor, 1, 4, colors.lightBlue, colors.white, "testing world here",
+    function() print("button two hit") end
+)
 buttonTwo.draw()
 
 
