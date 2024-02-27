@@ -14,9 +14,12 @@ currentState = nil
 IS_RUNNING = false
 
 function runAlarm()
-    os.pullEvent("bulkhead_started")
+    local event = os.pullEvent("bulkhead_started")
+    print(event)
+    speaker.playSound(ALARM)
     while true do
         local event = os.pullEvent("bulkhead_stopped", "speaker_audio_empty")
+        print(event)
         if event == "speaker_audio_empty" then
             speaker.playSound(ALARM)
         else
@@ -54,8 +57,5 @@ function listen_for_command()
 end
 
 while true do
-    if currentState == nil then
-        -- we don't know where the door is
-    end
     parallel.waitForAny(drive_bulkhead, listen_for_command, runAlarm)
 end
