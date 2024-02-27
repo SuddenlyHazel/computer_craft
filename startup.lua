@@ -137,7 +137,7 @@ function updateSystem(config, currentHash, lastHash)
 end
 
 function buildWatchFunction(socket)
-    function watchForRepoChanges()
+    return function()
         while true do
             local message = socket.receive()
 
@@ -158,13 +158,6 @@ function buildWatchFunction(socket)
 
         print("Socket Connection Closed!")
     end
-
-    return watchForRepoChanges
-end
-
-function readRequestedProgramsList()
-    settings.load("PROGRAMS_KEY")
-    return settings.get("PROGRAMS_KEY", {})
 end
 
 function runLocalPrograms()
@@ -178,7 +171,8 @@ function runLocalPrograms()
 
     local config = readConfig()
     local requestedPrograms = config[SERVER_PROGRAMS_KEY]
-
+    print("starting the following..")
+    pretty.pretty_print(requestedPrograms)
     function run_program(progPath)
         return function() 
             local status, result = pcall(shell.run, progPath)
