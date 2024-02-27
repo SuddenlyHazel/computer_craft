@@ -1,7 +1,7 @@
 local pretty = require "cc.pretty"
 
 SETTINGS_KEY = "hazel.computer_craft"
-GITHUB_TOKEN = "hazel.github_token"
+PROGRAMS_KEY = "hazel.computer_craft.programs"
 
 DEFAULT_SETTING = {
     ["commit_url"] = "https://api.github.com/repos/SuddenlyHazel/computer_craft/commits/main",
@@ -10,6 +10,12 @@ DEFAULT_SETTING = {
     ["boot_config"] = "boot.json",
     ["boot_program"] = nil,
 }
+
+-- Returns the list of programs stored in config to run
+function getProgramList()
+    settings.load(SETTINGS_KEY)
+    settings.get(SETTINGS_KEY, {})
+end
 
 function getGithubToken()
     settings.get(GITHUB_TOKEN)
@@ -85,7 +91,10 @@ function updateFiles(hash, bootJson, config)
             file.write(progFile)
             file.close()
         end
+        local startFile = bootJson["startFile"]
+        shell.setAlias(value["id"], fs.combine("/", "programs", startFile))
     end
+    
     fs.delete("programs")
     fs.copy(programsDir, "programs")
     fs.delete(programsDir)

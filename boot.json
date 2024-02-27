@@ -12,6 +12,7 @@
         {
             "name": "Factory GUI",
             "id": "factory_gui",
+            "startFile" : "factory_gui.lua",
             "files": [
                 "factory_gui.lua"
             ]
