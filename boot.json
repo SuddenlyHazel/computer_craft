@@ -20,11 +20,22 @@
             "files": [
                 "factory_gui.lua"
             ]
+        },
+        {
+            "name": "Bulkhead PLC Systen",
+            "id": "bulkhead_control",
+            "startFile" : "bulkhead_control.lua",
+            "files": [
+                "bulkhead_control.lua"
+            ]
         }
     ],
     "deployments" : {
         "warehouse" : {
             "programs" : ["factory_gui"] 
+        },
+        "bulkhead_control" : {
+            "programs" : ["bulkhead_control"] 
         }
     }
 }
