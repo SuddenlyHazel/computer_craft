@@ -114,7 +114,7 @@ function updateFiles(hash, bootJson, config)
     local commonDir = string.format("%s_common", hash)
     fs.makeDir(commonDir)
     for _, value in pairs(bootJson["common"]) do
-        print(string.format(":: Fetching common | %s", value))
+        print(string.format(":: Fetching common lib | %s", value))
 
         local progFile = getRepoFile(hash, config["repo_url"], value)
         local path = fs.combine("/", commonDir, value)
