@@ -55,9 +55,9 @@ function updateFiles(hash, bootJson, config)
     local startupPrograms = bootJson["startup"]
     fs.makeDir(hash)
     for _, value in pairs(startupPrograms) do
-        print(string.format("Fetching program | %s", value["id"]))
+        print(string.format(":: Fetching program | %s", value["id"]))
         for _, filename in pairs(value["files"]) do
-            print(string.format("       fetching file %s", filename))
+            print(string.format("       :: fetching file %s", filename))
             local progFile = getRepoFile(hash, config["repo_url"], filename)
             local path = fs.combine("/", hash, filename)
             local file = fs.open(path, "w")
@@ -74,15 +74,17 @@ end
 
 function updateSystem(config, currentHash, lastHash)
     if lastHash ~= currentHash then
-        print("Repo has been updated")
+        pretty.print(pretty.text("Repo has been updated", colors.red))
         print(string.format("last_sha: %s, current_sha: %s", lastHash, currentHash))
-        print("Fetching boot.json..")
+        pretty.print(pretty.text("Fetching boot.json..", colors.blue))
 
         local bootJson = readBootConfig(currentHash, config)
         updateFiles(currentHash, bootJson, config)
         config["last_commit_hash"] = currentHash
         saveConfig(config)
         os.reboot()
+    else
+        pretty.print(pretty.text("No updates", colors.blue))
     end
 end
 
@@ -90,11 +92,11 @@ function buildWatchFunction(socket)
     function watchForRepoChanges()
         while true do
             local message = socket.receive()
-            
+
             if message == nil then
                 break
             end
-            
+
             local message = textutils.unserializeJSON(message)
 
             if message["HashUpdated"] ~= nil then
@@ -105,6 +107,7 @@ function buildWatchFunction(socket)
                 updateSystem(config, currentHash, lastHash)
             end
         end
+
         print("Socket Connection Closed!")
     end
 
@@ -120,6 +123,7 @@ while true do
             "\"GetCurrentHash\""
         )
     end
+
     if socket ~= nil then
         local watcher = buildWatchFunction(socket)
         parallel.waitForAll(watcher, requestFirstData)
