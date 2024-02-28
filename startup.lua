@@ -145,7 +145,14 @@ function updateSystem(config, currentHash, lastHash)
         local bootJson = readBootConfig(currentHash, config)
         updateFiles(currentHash, bootJson, config)
         config["last_commit_hash"] = currentHash
+
+        fs.delete("repo_hash")
+        local file = fs.open("repo_hash", "w")
+        file.write(currentHash)
+        file.close()
+
         saveConfig(config)
+        
         os.reboot()
     else
         pretty.print(pretty.text("No updates", colors.blue))
