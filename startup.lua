@@ -148,7 +148,7 @@ function updateSystem(config, currentHash, lastHash)
 
         fs.delete("repo_hash")
 
-        local file = fs.open("/repo_hash.txt", "w")
+        local file = fs.open("repo_hash", "w")
         file.write(currentHash)
         file.close()
 
