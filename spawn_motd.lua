@@ -40,18 +40,13 @@ function refresh_monitor(file_hash)
     end
 end
 
-while true do
-    local now = os.epoch("local") / 1000;
-    print("refreshing motd", now)
 
-    local current_hash = get_hash()
-    print("current hash is: ", current_hash)
+local hash = "main"
 
-    if current_hash ~= last_hash then
-        print("hash has changed!")
-        refresh_monitor(current_hash)
-    end
-    last_hash = current_hash
-    -- sleep for 30 seconds 
-    os.sleep(5)
+if fs.exists("repo_hash") then
+    fs.open("repo_hash", "r")
+    hash = file.readAll()
+    file.close()
 end
+
+refresh_monitor(hash)

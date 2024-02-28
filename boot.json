@@ -28,6 +28,14 @@
             "files": [
                 "bulkhead_control.lua"
             ]
+        },
+        {
+            "name": "Spawn MOTD",
+            "id": "spawn_motd",
+            "startFile" : "spawn_motd.lua",
+            "files": [
+                "spawn_motd.lua"
+            ]
         }
     ],
     "deployments" : {
@@ -36,6 +44,9 @@
         },
         "bulkhead_control" : {
             "programs" : ["bulkhead_control"] 
+        },
+        "spawn_motd" : {
+            "programs" : ["spawn_motd"] 
         }
     }
 }
