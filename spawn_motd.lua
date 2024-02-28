@@ -44,7 +44,7 @@ end
 local hash = "main"
 
 if fs.exists("repo_hash") then
-    fs.open("repo_hash", "r")
+    local file = fs.open("repo_hash", "r")
     hash = file.readAll()
     file.close()
 end
