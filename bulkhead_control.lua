@@ -1,4 +1,5 @@
 peripheral.find("modem", rednet.open)
+
 speaker = peripheral.find("speaker")
 ALARM = "mekanism:tile.machine.industrial_alarm"
 

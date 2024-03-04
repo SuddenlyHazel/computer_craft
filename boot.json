@@ -36,6 +36,14 @@
             "files": [
                 "spawn_motd.lua"
             ]
+        },
+        {
+            "name": "Guard Logistics Program",
+            "id": "guard_logistics",
+            "startFile" : "guard_logistics.lua",
+            "files": [
+                "guard_logistics.lua"
+            ]
         }
     ],
     "deployments" : {
@@ -47,6 +55,9 @@
         },
         "spawn_motd" : {
             "programs" : ["spawn_motd"] 
+        },
+        "guard_logistics" : {
+            "programs" : ["guard_logistics"]
         }
     }
 }
