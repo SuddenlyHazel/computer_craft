@@ -46,6 +46,45 @@ function listenForComeCommand()
     end
 end
 
+function listenForAttackCommand()
+    while true do
+        local id, message = rednet.receive("attack")
+        local location = playerDetector.getPlayerPos("zelamity")
+        location = vector.new(location.x, location.y, location.z)
+
+        print(("attacking around player at %s"):format(pretty.render(pretty.pretty(location))))
+       
+        for _, droneInterface in pairs(droneInterfaces) do
+            droneInterface.setVarable(message)
+            local b1 = location.add(vector.new(16,-16,16))
+            local b2 = location.add(vector.new(-16,16,-16))
+            droneInterface.addArea(b1.x,b1.y,b1.z,b2.x,b2.y,b2.z, "box")
+        end
+    end
+end
+
+IS_SHOWING = false
+function listenForToggleAreaCommand()
+    while true do
+        local id, message = rednet.receive("attack")
+        local location = playerDetector.getPlayerPos("zelamity")
+        location = vector.new(location.x, location.y, location.z)
+
+        print(("going to player at %s"):format(pretty.render(pretty.pretty(location))))
+        
+        IS_SHOWING = not IS_SHOWING
+        for _, droneInterface in pairs(droneInterfaces) do
+            if IS_SHOWING then
+                droneInterface.showArea()
+            else
+                droneInterface.hideArea()
+            end
+
+            break
+        end
+    end
+end
+
 function listenForRechargeCommand()
     while true do
         local id, message = rednet.receive("recharge")
@@ -87,4 +126,5 @@ function gotoPoint(v, droneInterface)
 end
 
 parallel.waitForAny(listenForRegisterPointCommand, listenForGotoCommand,
- listenForRechargeCommand, listenForComeCommand)
+ listenForRechargeCommand, listenForComeCommand, listenForAttackCommand,
+listenForToggleAreaCommand)
