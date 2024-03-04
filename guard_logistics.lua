@@ -46,8 +46,8 @@ function listenForComeCommand()
 
         for _, droneInterface in pairs(droneInterfaces) do
             print("moving drone")
-            gotoPoint(updated, droneInterface)
-            print(("moving drone %s"):format(pretty.render(pretty.pretty(updated))))
+            gotoPoint(location, droneInterface)
+            print(("moving drone %s"):format(pretty.render(pretty.pretty(location))))
             location = location:add(vector:new(1,0,1))
         end
     end
