@@ -45,7 +45,7 @@ function Drone:new(name, droneInterface)
     self.name = name
     
     print(("init drone with interface %s"):format(self.name))
-    return newObject
+    return { newObject }
 end
 
 function Drone:gotoLocation(p)
