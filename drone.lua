@@ -55,7 +55,7 @@ end
 Drone.methodMetadata["standby"] = { _dronePrecheck = true }
 
 function Drone:isConnected()
-    self.droneInterface.isConnectedToDrone()
+    return self.droneInterface.isConnectedToDrone()
 end
 
 function Drone:toggleShowArea()
