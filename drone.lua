@@ -62,6 +62,7 @@ setmetatable(Drone, {
         local value = rawget(Drone, key) -- Attempt to get the method directly from the class
         local metadata = Drone.methodMetadata[key]
         -- Check if the method exists and is tagged
+        print(key)
         if type(value) == "function" and metadata and metadata._dronePrecheck then
             return function(self, ...)
                 if self:isConnected() then
