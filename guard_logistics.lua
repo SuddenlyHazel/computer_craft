@@ -27,7 +27,7 @@ function listenForGotoCommand()
         pretty.print(pretty.pretty(message))
         local position = playerInterface.getItemInOffHand().nbt.Pos
 
-        local offset = vector.new(0,1,0)
+        local offset = vector.new(0, 1, 0)
         for _, droneInterface in pairs(droneInterfaces) do
             gotoPoint(gpsToVec(position):add(offset), droneInterface)
         end
@@ -41,35 +41,56 @@ function listenForComeCommand()
         location = vector.new(location.x, location.y, location.z)
 
         print(("going to player at %s"):format(pretty.render(pretty.pretty(location))))
-        local offset = vector.new(0,1,0)
+        local offset = vector.new(0, 2, 0)
         location = location:add(offset)
+
+        local droneCount = #droneInterfaces
 
         for _, droneInterface in pairs(droneInterfaces) do
             droneInterface.clearArea()
             print(("moving drone %s"):format(pretty.render(pretty.pretty(location))))
-            location = location:add(vector.new(1,0,0))
+            location = location:add(vector.new(1, 0, 0))
             print(("dbg %s"):format(pretty.render(pretty.pretty(location))))
             gotoPoint(location, droneInterface)
         end
     end
 end
 
+function getPlayerLocation()
+    local playerLocation = playerDetector.getPlayerPos("zelamity")
+    return vector.new(playerLocation.x, playerLocation.y, playerLocation.z)
+end
+
 function listenForAttackCommand()
     while true do
         local id, message = rednet.receive("attack")
+
+        local playerLocation = getPlayerLocation()
+
         local location = playerDetector.getPlayerPos("zelamity")
         location = vector.new(location.x, location.y, location.z)
 
         print(("attacking around player at %s"):format(pretty.render(pretty.pretty(location))))
-       
+
+        local cbs = {}
+
         for _, droneInterface in pairs(droneInterfaces) do
             droneInterface.clearWhitelistText()
             droneInterface.addWhitelistText(message)
-            local b1 = location:add(vector.new(16,-16,16))
-            local b2 = location:add(vector.new(-16,16,-16))
-            droneInterface.addArea(b1.x,b1.y,b1.z,b2.x,b2.y,b2.z, "filled")
+            local b1 = location:add(vector.new(16, -16, 16))
+            local b2 = location:add(vector.new(-16, 16, -16))
+            droneInterface.addArea(b1.x, b1.y, b1.z, b2.x, b2.y, b2.z, "filled")
             droneInterface.setAction("entity_attack")
+
+            table.insert(cbs, function()
+                while true do
+                    sleep(1)
+                    local currentPlayerLocation = getPlayerLocation()
+                end
+            end)
         end
+
+        -- todo kick of drone cbs and wait for battle to end
     end
 end
 
@@ -79,7 +100,7 @@ function listenForToggleAreaCommand()
         local id, message = rednet.receive("toggleArea")
         local location = playerDetector.getPlayerPos("zelamity")
         location = vector.new(location.x, location.y, location.z)
-        
+
         IS_SHOWING = not IS_SHOWING
         for _, droneInterface in pairs(droneInterfaces) do
             if IS_SHOWING then
@@ -89,6 +110,20 @@ function listenForToggleAreaCommand()
             end
 
             break
+        end
+    end
+end
+
+function listenForStandbyCommand()
+    while true do
+        local id, message = rednet.receive("standby")
+        local location = playerDetector.getPlayerPos("zelamity")
+        location = vector.new(location.x, location.y, location.z)
+
+        for _, droneInterface in pairs(droneInterfaces) do
+            droneInterface.clearArea()
+            droneInterface.clearWhitelistText()
+            droneInterface.setAction("standby")
         end
     end
 end
@@ -134,5 +169,5 @@ function gotoPoint(v, droneInterface)
 end
 
 parallel.waitForAny(listenForRegisterPointCommand, listenForGotoCommand,
- listenForRechargeCommand, listenForComeCommand, listenForAttackCommand,
-listenForToggleAreaCommand)
+    listenForRechargeCommand, listenForComeCommand, listenForAttackCommand,
+    listenForToggleAreaCommand, listenForStandbyCommand)
