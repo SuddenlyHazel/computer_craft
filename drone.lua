@@ -64,7 +64,7 @@ setmetatable(Drone, {
         -- Check if the method exists and is tagged
         if type(value) == "function" and metadata and metadata._dronePrecheck then
             return function(self, ...)
-                if self:beforeMethod() then
+                if self:isConnected() then
                     return value(self, ...)
                 else
                     print("Drone is not connected!")
