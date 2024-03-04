@@ -1,3 +1,5 @@
+pretty = require("cc.pretty")
+
 ---@class Drone
 Drone = {}
 
@@ -7,7 +9,8 @@ Drone.__index = function(table, key)
     local value = rawget(Drone, key) -- Attempt to get the method directly from the class
     local metadata = Drone.methodMetadata[key]
     -- Check if the method exists and is tagged
-    print(key)
+    pretty.print(pretty.pretty(table))
+    
     if type(value) == "function" and metadata and metadata._dronePrecheck then
         return function(self, ...)
             if self:isConnected() then
@@ -33,12 +36,15 @@ function buildFromInterface(...)
 end
 
 function Drone:new(name, droneInterface)
-    local self = setmetatable({}, Drone) -- Create a new table and set its metatable to the class
+    local newObject = setmetatable({}, self)
+    self.__index = self
+
     self.droneInterface = droneInterface
     self.isShowingArea = false
     self.name = name
+    
     print(("init drone with interface %s"):format(self.name))
-    return self
+    return newObject
 end
 
 function Drone:gotoLocation(p)
