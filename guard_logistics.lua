@@ -1,6 +1,6 @@
-local buttons = require(".common.drone")
+local drone = require(".common.drone")
 
-droneInterfaces = { peripheral.find("drone_interface") }
+droneInterfaces = { peripheral.find("drone_interface", drone.Drone.new) }
 playerInterface = peripheral.find("inventoryManager")
 playerDetector = peripheral.find("playerDetector")
 

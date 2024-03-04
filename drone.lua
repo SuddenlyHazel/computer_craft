@@ -2,10 +2,12 @@ Drone = {}
 Drone.__index = Drone -- Set the __index metamethod to the class table itself
 Drone.methodMetadata = {}
 
-function Drone.new(droneInterface)
+function Drone.new(name, droneInterface)
     local self = setmetatable({}, Drone) -- Create a new table and set its metatable to the class
     self.droneInterface = droneInterface
     self.isShowingArea = false
+    self.name = name
+    print(("init drone with interface %s"):format(self.name))
     return self
 end
 
