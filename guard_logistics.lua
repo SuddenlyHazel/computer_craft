@@ -7,7 +7,7 @@ pretty = require("cc.pretty")
 
 function listenForCommand()
     while true do
-        local id, message = rednet.listen("register_point")
+        local id, message = rednet.receive("register_point")
         pretty.print(message)        
     end
 end 
