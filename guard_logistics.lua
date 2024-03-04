@@ -57,7 +57,7 @@ function goToChargePoint()
         end
     end
     print(("recharing drone at %s"):format(closestName))
-    gotoPoint(POINTS["recharge"][closestName])
+    gotoPoint(POINTS["recharge"][closestName]:add(vector.new(0, 1, 0)))
 end
 
 function gotoPoint(v)
