@@ -1,5 +1,6 @@
 Drone = {}
 Drone.__index = Drone -- Set the __index metamethod to the class table itself
+Drone.methodMetadata = {}
 
 function Drone.new(droneInterface)
     local self = setmetatable({}, Drone) -- Create a new table and set its metatable to the class
@@ -14,13 +15,12 @@ function Drone:gotoLocation(p)
     self.droneInterface.setAction("goto")
 end
 
-Drone.gotoLocation._dronePrecheck = true
+Drone.methodMetadata["gotoLocation"] = {_dronePrecheck = true}
 
 function Drone:getPressure()
     self.droneInterface.getDronePressure()
 end
-
-Drone.getPressure._dronePrecheck = true
+Drone.methodMetadata["getPressure"] = {_dronePrecheck = true}
 
 function Drone:standby()
     print("drone entering standby")
@@ -29,7 +29,7 @@ function Drone:standby()
     self.droneInterface.setAction("standby")
 end
 
-Drone.standby._dronePrecheck = true
+Drone.methodMetadata["standby"] = {_dronePrecheck = true}
 
 function Drone:isConnected()
     self.droneInterface.isConnectedToDrone()
@@ -43,14 +43,14 @@ function Drone:toggleShowArea()
     end
 end
 
-Drone.toggleShowArea._dronePrecheck = true
+Drone.methodMetadata["toggleShowArea"] = {_dronePrecheck = true}
 
 setmetatable(Drone, {
     __index = function(table, key)
         local value = rawget(Drone, key) -- Attempt to get the method directly from the class
-
+        local metadata = Drone.methodMetadata[key]
         -- Check if the method exists and is tagged
-        if type(value) == "function" and value._dronePrecheck then
+        if type(value) == "function" and metadata and metadata._dronePrecheck then
             return function(self, ...)
                 if self:beforeMethod() then
                     return value(self, ...)
