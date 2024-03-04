@@ -5,27 +5,6 @@ Drone = {}
 
 Drone.methodMetadata = {}
 
-Drone.__index = function(table, key)
-    local value = rawget(Drone, key) -- Attempt to get the method directly from the class
-    local metadata = Drone.methodMetadata[key]
-    -- Check if the method exists and is tagged
-    pretty.print(pretty.pretty(table))
-
-    if type(value) == "function" and metadata and metadata._dronePrecheck then
-        return function(self, ...)
-            if self:isConnected() then
-                return value(self, ...)
-            else
-                print("Drone is not connected!")
-                return nil
-            end
-        end
-    else
-        -- Return the original value (could be a method or nil)
-        return value
-    end
-end
-
 function buildFromInterface(...)
     local args = { ... }
     local output = {}
@@ -36,15 +15,32 @@ function buildFromInterface(...)
     return output
 end
 
-function Drone:new(name, droneInterface)
-    self = setmetatable({}, {__index = self})
+function Drone.__index(table, key)
+    local value = rawget(Drone, key) or Drone[key]
+    local metadata = methodMetadata[key]
 
-    self.droneInterface = droneInterface
-    self.isShowingArea = false
-    self.name = name
-    
-    print(("init drone with interface %s"):format(self.name))
-    return self
+    if type(value) == "function" and metadata and metadata._dronePrecheck then
+        -- Wrap the function if it requires precheck
+        return function(self, ...)
+            if self:isConnected() then
+                return value(self, ...)
+            else
+                print("Drone is not connected!")
+            end
+        end
+    else
+        return value
+    end
+end
+
+function Drone:new(name, droneInterface)
+    local instance = setmetatable({}, Drone)
+    instance.name = name
+    instance.droneInterface = droneInterface
+    instance.isShowingArea = false
+
+    print(("init drone with interface %s"):format(instance.name))
+    return instance
 end
 
 function Drone:gotoLocation(p)
