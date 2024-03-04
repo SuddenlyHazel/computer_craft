@@ -37,14 +37,14 @@ function buildFromInterface(...)
 end
 
 function Drone:new(name, droneInterface)
-    local instance = setmetatable({}, {__index = self})
+    self = setmetatable({}, {__index = self})
 
     self.droneInterface = droneInterface
     self.isShowingArea = false
     self.name = name
     
     print(("init drone with interface %s"):format(self.name))
-    return instance
+    return self
 end
 
 function Drone:gotoLocation(p)
