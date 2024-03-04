@@ -1,18 +1,18 @@
 ---@class Drone
 Drone = {}
---Drone.__index = Drone -- Set the __index metamethod to the class table itself
+Drone.__index = Drone -- Set the __index metamethod to the class table itself
 Drone.methodMetadata = {}
 
 function buildFromInterface(...)
     local args = {...}
     local output = {}
     for _, v in pairs(args) do
-        table.insert(output, Drone.new(v["iName"], v))
+        table.insert(output, Drone:new(v["iName"], v))
     end
     return output
 end
 
-function Drone.new(name, droneInterface)
+function Drone:new(name, droneInterface)
     local self = setmetatable({}, Drone) -- Create a new table and set its metatable to the class
     self.droneInterface = droneInterface
     self.isShowingArea = false
