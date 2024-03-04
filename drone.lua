@@ -16,7 +16,27 @@ function buildFromInterface(...)
 end
 
 function Drone:new(name, droneInterface)
-    local instance = setmetatable({}, {__index = Drone})
+    local instance = setmetatable({}, {
+        __index = function(table, key)
+            local method = Drone[key]
+            -- Check if this method requires a precheck
+            if Drone.methodMetadata[key] and Drone.methodMetadata[key]._dronePrecheck then
+                -- Return a wrapper function
+                return function(...)
+                    -- Perform the precheck
+                    if droneInterface.isConnectedToDrone() then
+                        -- Call the original method if precheck passes
+                        method(table, ...)
+                    else
+                        print("Not connected to drone! Eeek")
+                    end
+                end
+            else
+                -- Return the original method if no precheck is required
+                return method
+            end
+        end
+    })
     instance.name = name
     instance.droneInterface = droneInterface
     instance.isShowingArea = false
