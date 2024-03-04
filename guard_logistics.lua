@@ -90,6 +90,7 @@ function listenForAttackCommand()
                     droneInterface.clearArea()
                     droneInterface.clearWhitelistText()
                     droneInterface.abortAction()
+                    print("ending attack")
                 end)
             end)
         end
