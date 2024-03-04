@@ -44,7 +44,9 @@ function listenForComeCommand()
         local offset = vector.new(0,1,0)
         for _, droneInterface in pairs(droneInterfaces) do
             print("moving drone")
-            gotoPoint(location:add(offset), droneInterface)
+            local updated = location:add(offset)
+            gotoPoint(updated, droneInterface)
+            print(("moving drone %s"):format(pretty.render(pretty.pretty(updated))))
             offset = offset:add(vector:new(1,0,1))
         end
     end
