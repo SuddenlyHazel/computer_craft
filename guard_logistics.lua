@@ -7,7 +7,8 @@ droneInterfaces = { peripheral.find("drone_interface"), function(name, wrapped)
 end }
 
 ---@type Drone[]
-droneInterfaces = 
+droneInterfaces = drone.buildFromInterface(droneInterfaces)
+
 playerInterface = peripheral.find("inventoryManager")
 playerDetector = peripheral.find("playerDetector")
 

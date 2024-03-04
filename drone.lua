@@ -78,4 +78,4 @@ setmetatable(Drone, {
     end
 })
 
-return {Drone = Drone}
+return {Drone = Drone, buildFromInterface = buildFromInterface}
