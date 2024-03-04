@@ -30,7 +30,6 @@ function listenForGotoCommand()
         local offset = vector.new(0,1,0)
         for _, droneInterface in pairs(droneInterfaces) do
             gotoPoint(gpsToVec(position):add(offset), droneInterface)
-            offset = offset:add(vector:new(1,0,1))
         end
     end
 end
@@ -42,9 +41,10 @@ function listenForComeCommand()
         location = vector.new(location.x, location.y, location.z)
 
         print(("going to player at %s"):format(pretty.render(pretty.pretty(location))))
-       
+        local offset = vector.new(0,1,0)
         for _, droneInterface in pairs(droneInterfaces) do
-            gotoPoint(location:add(vector.new(0,2,0)), droneInterface)
+            gotoPoint(location:add(offset), droneInterface)
+            offset = offset:add(vector:new(1,0,1))
         end
     end
 end
