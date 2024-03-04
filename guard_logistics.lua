@@ -26,8 +26,11 @@ function listenForGotoCommand()
         local id, message = rednet.receive("goto_point")
         pretty.print(pretty.pretty(message))
         local position = playerInterface.getItemInOffHand().nbt.Pos
+
+        local offset = vector.new(0,1,0)
         for _, droneInterface in pairs(droneInterfaces) do
-            gotoPoint(gpsToVec(position):add(vector.new(0,1,0)), droneInterface)
+            gotoPoint(gpsToVec(position):add(offset), droneInterface)
+            offset = offset:add(vector:new(1,0,1))
         end
     end
 end
