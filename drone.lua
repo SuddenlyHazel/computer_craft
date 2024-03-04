@@ -17,7 +17,7 @@ end
 
 function Drone.__index(table, key)
     local value = rawget(Drone, key) or Drone[key]
-    local metadata = methodMetadata[key]
+    local metadata = Drone.methodMetadata[key]
 
     if type(value) == "function" and metadata and metadata._dronePrecheck then
         -- Wrap the function if it requires precheck
