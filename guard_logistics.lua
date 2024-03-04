@@ -15,7 +15,7 @@ function listenForCommand()
         pretty.print(pretty.pretty(message))
         local position = playerInterface.getItemInOffHand().nbt.Pos
         pretty.print(pretty.pretty(position))
-        POINTS[message.type][message.name] = position
+        POINTS[message.type][message.name] = vector.new(position.X, position.Y, position.Z)
     end
 end 
 
@@ -23,4 +23,8 @@ function getPressure()
     return drone_interface.getDronePressure()
 end
 
+function goToChargePoint()
+    local currentPos = droneInterface.getDronePositionVec()
+
+end
 listenForCommand()
