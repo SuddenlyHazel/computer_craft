@@ -5,7 +5,9 @@ peripheral.find("modem", rednet.open)
 
 pretty = require("cc.pretty")
 
-RECHARGE_POINTS = {}
+POINTS = {
+    recharge = {}
+}
 
 function listenForCommand()
     while true do
@@ -13,6 +15,7 @@ function listenForCommand()
         pretty.print(pretty.pretty(message))
         local position = playerInterface.getItemInOffHand().nbt.Pos
         pretty.print(pretty.pretty(position))
+        POINTS[message.type][message.name] = position
     end
 end 
 
