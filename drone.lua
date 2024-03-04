@@ -1,6 +1,7 @@
 pretty = require("cc.pretty")
 
 ---@class Drone
+---@field name string
 Drone = {}
 
 Drone.methodMetadata = {}
@@ -15,8 +16,10 @@ function buildFromInterface(...)
     return output
 end
 
+---comment
+---@return Drone
 function Drone:new(name, droneInterface)
-    local instance = setmetatable({}, {__index = Drone})
+    local instance = setmetatable({}, { __index = Drone })
     instance.name = name
     instance.droneInterface = droneInterface
     instance.isShowingArea = false
@@ -28,7 +31,7 @@ end
 function Drone:gotoLocation(p)
     if not self:isConnected() then
         print("not connected", self:isConnected())
-        return 
+        return
     end
     self.droneInterface.clearArea()
     self.droneInterface.addArea(p.x, p.y, p.z)
@@ -65,6 +68,30 @@ function Drone:toggleShowArea()
     else
         self.droneInterface.hideArea()
     end
+end
+
+function Drone:attack(allow_filter, location)
+    self.droneInterface.clearArea()
+    self.droneInterface.clearWhitelistText()
+    self.droneInterface.addWhitelistText(allow_filter)
+
+    local b1 = location:add(vector.new(16, -16, 16))
+    local b2 = location:add(vector.new(-16, 16, -16))
+    self.droneInterface.addArea(b1.x, b1.y, b1.z, b2.x, b2.y, b2.z, "filled")
+    self.droneInterface.setAction("entity_attack")
+
+    return {
+        stopWatcher = function()
+            parallel.waitForAny(
+                function()
+                    local id, message = rednet.receive("stopAttack")
+                    droneInterface.clearArea()
+                    droneInterface.clearWhitelistText()
+                    droneInterface.abortAction()
+                    print(("%s ending attack"):format(self.name))
+                end)
+        end
+    }
 end
 
 Drone.methodMetadata["toggleShowArea"] = { _dronePrecheck = true }

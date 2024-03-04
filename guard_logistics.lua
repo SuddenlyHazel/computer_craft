@@ -82,24 +82,7 @@ function listenForAttackCommand()
         local cbs = {}
 
         for _, droneInterface in pairs(droneInterfaces) do
-            droneInterface.clearArea()
-            droneInterface.clearWhitelistText()
-            droneInterface.addWhitelistText(message)
-
-            local b1 = location:add(vector.new(16, -16, 16))
-            local b2 = location:add(vector.new(-16, 16, -16))
-            droneInterface.addArea(b1.x, b1.y, b1.z, b2.x, b2.y, b2.z, "filled")
-            droneInterface.setAction("entity_attack")
-
-            table.insert(cbs, function()
-                parallel.waitForAny(function()
-                    local id, message = rednet.receive("stopAttack")
-                    droneInterface.clearArea()
-                    droneInterface.clearWhitelistText()
-                    droneInterface.abortAction()
-                    print("ending attack")
-                end)
-            end)
+            table.insert(cbs, droneInterface:attack(message, location))
         end
 
         parallel.waitForAny(table.unpack(cbs))
@@ -108,21 +91,14 @@ function listenForAttackCommand()
     end
 end
 
-IS_SHOWING = false
 function listenForToggleAreaCommand()
     while true do
         local id, message = rednet.receive("toggleArea")
         local location = playerDetector.getPlayerPos("zelamity")
         location = vector.new(location.x, location.y, location.z)
 
-        IS_SHOWING = not IS_SHOWING
         for _, droneInterface in pairs(droneInterfaces) do
-            if IS_SHOWING then
-                droneInterface.showArea()
-            else
-                droneInterface.hideArea()
-            end
-
+            droneInterface:toggleShowArea()
             break
         end
     end
@@ -135,9 +111,7 @@ function listenForStandbyCommand()
         location = vector.new(location.x, location.y, location.z)
 
         for _, droneInterface in pairs(droneInterfaces) do
-            droneInterface.clearArea()
-            droneInterface.clearWhitelistText()
-            droneInterface.setAction("standby")
+            droneInterface:standby()
         end
     end
 end
