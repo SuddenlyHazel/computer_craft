@@ -1,0 +1,67 @@
+Drone = {}
+Drone.__index = Drone -- Set the __index metamethod to the class table itself
+
+function Drone.new(droneInterface)
+    local self = setmetatable({}, Drone) -- Create a new table and set its metatable to the class
+    self.droneInterface = droneInterface
+    self.isShowingArea = false
+    return self
+end
+
+function Drone:gotoLocation(p)
+    self.droneInterface.clearArea()
+    self.droneInterface.addArea(p.x, p.y, p.z)
+    self.droneInterface.setAction("goto")
+end
+
+Drone.gotoLocation._dronePrecheck = true
+
+function Drone:getPressure()
+    self.droneInterface.getDronePressure()
+end
+
+Drone.getPressure._dronePrecheck = true
+
+function Drone:standby()
+    print("drone entering standby")
+    self.droneInterface.clearArea()
+    self.droneInterface.clearWhitelistText()
+    self.droneInterface.setAction("standby")
+end
+
+Drone.standby._dronePrecheck = true
+
+function Drone:isConnected()
+    self.droneInterface.isConnectedToDrone()
+end
+
+function Drone:toggleShowArea()
+    if self.isShowingArea then
+        self.droneInterface.showArea()
+    else
+        self.droneInterface.hideArea()
+    end
+end
+
+Drone.toggleShowArea._dronePrecheck = true
+
+setmetatable(Drone, {
+    __index = function(table, key)
+        local value = rawget(Drone, key) -- Attempt to get the method directly from the class
+
+        -- Check if the method exists and is tagged
+        if type(value) == "function" and value._dronePrecheck then
+            return function(self, ...)
+                if self:beforeMethod() then
+                    return value(self, ...)
+                else
+                    print("Drone is not connected!")
+                    return nil
+                end
+            end
+        else
+            -- Return the original value (could be a method or nil)
+            return value
+        end
+    end
+})
