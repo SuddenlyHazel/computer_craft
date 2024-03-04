@@ -1,6 +1,6 @@
 ---@class Drone
 Drone = {}
-Drone.__index = Drone -- Set the __index metamethod to the class table itself
+--Drone.__index = Drone -- Set the __index metamethod to the class table itself
 Drone.methodMetadata = {}
 
 function buildFromInterface(...)
