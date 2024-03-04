@@ -9,7 +9,7 @@ POINTS = {
     recharge = {}
 }
 
-function listenForCommand()
+function listenForRegisterPointCommand()
     while true do
         local id, message = rednet.receive("register_point")
         pretty.print(pretty.pretty(message))
@@ -17,7 +17,18 @@ function listenForCommand()
         pretty.print(pretty.pretty(position))
         POINTS[message.type][message.name] = vector.new(position.X, position.Y, position.Z)
     end
-end 
+end
+
+function listenForGotoCommand()
+    while true do
+        local id, message = rednet.receive("goto_point")
+        pretty.print(pretty.pretty(message))
+        local position = playerInterface.getItemInOffHand().nbt.Pos
+        droneInterface.clearArea()
+        droneInterface.addArea(position.X, position.Y, position.Z)
+        droneInterface.setAction("goto")
+    end
+end
 
 function getPressure()
     return drone_interface.getDronePressure()
@@ -25,6 +36,5 @@ end
 
 function goToChargePoint()
     local currentPos = droneInterface.getDronePositionVec()
-
 end
-listenForCommand()
+listenForRegisterPointCommand()
