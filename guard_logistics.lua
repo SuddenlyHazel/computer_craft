@@ -25,7 +25,7 @@ function listenForGotoCommand()
         pretty.print(pretty.pretty(message))
         local position = playerInterface.getItemInOffHand().nbt.Pos
         droneInterface.clearArea()
-        droneInterface.addArea(position.X, position.Y, position.Z)
+        droneInterface.addArea(position.X, position.Y+1, position.Z)
         droneInterface.setAction("goto")
     end
 end
