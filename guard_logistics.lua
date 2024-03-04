@@ -24,10 +24,20 @@ function listenForGotoCommand()
         local id, message = rednet.receive("goto_point")
         pretty.print(pretty.pretty(message))
         local position = playerInterface.getItemInOffHand().nbt.Pos
-        droneInterface.clearArea()
-        droneInterface.addArea(position.X, position.Y+1, position.Z)
-        droneInterface.setAction("goto")
+        gotoPoint(gpsToVec(position))
     end
+end
+
+function listenForRechargeCommand()
+    while true do
+        local id, message = rednet.receive("recharge")
+        pretty.print(pretty.pretty(message))
+        goToChargePoint()
+    end
+end
+
+function gpsToVec(gpsVec)
+    return vector.new(gpsVec.X, gpsVec.Y, gpsVec.Z)
 end
 
 function getPressure()
@@ -36,6 +46,23 @@ end
 
 function goToChargePoint()
     local currentPos = droneInterface.getDronePositionVec()
+    local closest = 10000000
+    local closestName = "None"
+    for k, v in pairs(POINTS["recharge"]) do
+        local dist = currentPos:sub(v):length()
+        if dist < closest then
+            closestName = k
+            closest = dist
+        end
+    end
+    print("recharing drone at %s"):format(closestName)
+    gotoPoint(POINTS["recharge"][closestName])
 end
 
-parallel.waitForAny(listenForRegisterPointCommand, listenForGotoCommand)
+function gotoPoint(v)
+    droneInterface.clearArea()
+    droneInterface.addArea(v.x, v.y, v.z)
+    droneInterface.setAction("goto")
+end
+
+parallel.waitForAny(listenForRegisterPointCommand, listenForGotoCommand, listenForRechargeCommand)
