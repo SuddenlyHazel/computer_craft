@@ -35,7 +35,7 @@ end
 function listenForComeCommand()
     while true do
         local id, message = rednet.receive("come")
-        local location = getPlayerPos.getPlayerPos("zelamity")
+        local location = playerDetector.getPlayerPos("zelamity")
         location = vector.new(location.x, location.y, location.z)
 
         print(("going to player at %s"):format(pretty.render(pretty.pretty(location))))
