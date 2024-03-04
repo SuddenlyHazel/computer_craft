@@ -85,9 +85,9 @@ function Drone:attack(allow_filter, location)
             parallel.waitForAny(
                 function()
                     local id, message = rednet.receive("stopAttack")
-                    droneInterface.clearArea()
-                    droneInterface.clearWhitelistText()
-                    droneInterface.abortAction()
+                    self.droneInterface.clearArea()
+                    self.droneInterface.clearWhitelistText()
+                    self.droneInterface.abortAction()
                     print(("%s ending attack"):format(self.name))
                 end)
         end
