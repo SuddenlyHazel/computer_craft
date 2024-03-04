@@ -37,4 +37,5 @@ end
 function goToChargePoint()
     local currentPos = droneInterface.getDronePositionVec()
 end
-listenForRegisterPointCommand()
+
+parallel.waitForAny(listenForRegisterPointCommand, listenForGotoCommand)
