@@ -56,7 +56,7 @@ function goToChargePoint()
             closest = dist
         end
     end
-    print("recharing drone at %s"):format(closestName)
+    print(("recharing drone at %s"):format(closestName))
     gotoPoint(POINTS["recharge"][closestName])
 end
 
