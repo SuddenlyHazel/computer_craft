@@ -1,5 +1,7 @@
 droneInterfaces = { peripheral.find("drone_interface") }
 playerInterface = peripheral.find("inventoryManager")
+playerDetector = peripheral.find("playerDetector")
+
 chatbox = peripheral.find("chatBox")
 peripheral.find("modem", rednet.open)
 
@@ -25,7 +27,21 @@ function listenForGotoCommand()
         pretty.print(pretty.pretty(message))
         local position = playerInterface.getItemInOffHand().nbt.Pos
         for _, droneInterface in pairs(droneInterfaces) do
-            gotoPoint(gpsToVec(position), droneInterface)
+            gotoPoint(gpsToVec(position):add(vector.new(0,1,0)), droneInterface)
+        end
+    end
+end
+
+function listenForComeCommand()
+    while true do
+        local id, message = rednet.receive("come")
+        local location = getPlayerPos.getPlayerPos("zelamity")
+        location = vector.new(location.x, location.y, location.z)
+
+        print(("going to player at %s"):format(pretty.render(pretty.pretty(location))))
+       
+        for _, droneInterface in pairs(droneInterfaces) do
+            gotoPoint(gpsToVec(position):add(vector.new(0,2,0)), droneInterface)
         end
     end
 end
@@ -70,4 +86,5 @@ function gotoPoint(v, droneInterface)
     droneInterface.setAction("goto")
 end
 
-parallel.waitForAny(listenForRegisterPointCommand, listenForGotoCommand, listenForRechargeCommand)
+parallel.waitForAny(listenForRegisterPointCommand, listenForGotoCommand,
+ listenForRechargeCommand, listenForComeCommand)
