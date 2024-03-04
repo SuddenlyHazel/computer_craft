@@ -75,20 +75,26 @@ function listenForAttackCommand()
         local cbs = {}
 
         for _, droneInterface in pairs(droneInterfaces) do
+            droneInterface.clearArea()
             droneInterface.clearWhitelistText()
             droneInterface.addWhitelistText(message)
+
             local b1 = location:add(vector.new(16, -16, 16))
             local b2 = location:add(vector.new(-16, 16, -16))
             droneInterface.addArea(b1.x, b1.y, b1.z, b2.x, b2.y, b2.z, "filled")
             droneInterface.setAction("entity_attack")
 
             table.insert(cbs, function()
-                while true do
-                    sleep(1)
-                    local currentPlayerLocation = getPlayerLocation()
-                end
+                parallel.waitForAny(function()
+                    local id, message = rednet.receive("stopAttack", 1)
+                    droneInterface.clearArea()
+                    droneInterface.clearWhitelistText()
+                    droneInterface.abortAction()
+                end)
             end)
         end
+
+        parallel.waitForAny({ cbs })
 
         -- todo kick of drone cbs and wait for battle to end
     end
