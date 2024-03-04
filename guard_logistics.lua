@@ -66,11 +66,9 @@ end
 IS_SHOWING = false
 function listenForToggleAreaCommand()
     while true do
-        local id, message = rednet.receive("attack")
+        local id, message = rednet.receive("toggleArea")
         local location = playerDetector.getPlayerPos("zelamity")
         location = vector.new(location.x, location.y, location.z)
-
-        print(("going to player at %s"):format(pretty.render(pretty.pretty(location))))
         
         IS_SHOWING = not IS_SHOWING
         for _, droneInterface in pairs(droneInterfaces) do
