@@ -41,7 +41,7 @@ function listenForComeCommand()
         print(("going to player at %s"):format(pretty.render(pretty.pretty(location))))
        
         for _, droneInterface in pairs(droneInterfaces) do
-            gotoPoint(gpsToVec(position):add(vector.new(0,2,0)), droneInterface)
+            gotoPoint(location:add(vector.new(0,2,0)), droneInterface)
         end
     end
 end
