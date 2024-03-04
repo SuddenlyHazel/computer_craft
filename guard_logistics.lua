@@ -46,6 +46,7 @@ end
 
 function goToChargePoint()
     local currentPos = droneInterface.getDronePositionVec()
+    currentPos = vector.new(currentPos.x, currentPos.y, currentPos.z)
     local closest = 10000000
     local closestName = "None"
     for k, v in pairs(POINTS["recharge"]) do
