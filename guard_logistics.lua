@@ -95,7 +95,7 @@ function listenForAttackCommand()
             end)
         end
 
-        parallel.waitForAny({ cbs })
+        parallel.waitForAny(cbs)
 
         -- todo kick of drone cbs and wait for battle to end
     end
