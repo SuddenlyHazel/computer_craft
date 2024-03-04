@@ -16,27 +16,7 @@ function buildFromInterface(...)
 end
 
 function Drone:new(name, droneInterface)
-    local instance = setmetatable({}, {
-        __index = function(table, key)
-            local method = Drone[key]
-            -- Check if this method requires a precheck
-            if Drone.methodMetadata[key] and Drone.methodMetadata[key]._dronePrecheck then
-                -- Return a wrapper function
-                return function(...)
-                    -- Perform the precheck
-                    if droneInterface.isConnectedToDrone() then
-                        -- Call the original method if precheck passes
-                        method(table, ...)
-                    else
-                        print("Not connected to drone! Eeek")
-                    end
-                end
-            else
-                -- Return the original method if no precheck is required
-                return method
-            end
-        end
-    })
+    local instance = setmetatable({}, {__index = Drone})
     instance.name = name
     instance.droneInterface = droneInterface
     instance.isShowingArea = false
@@ -46,6 +26,7 @@ function Drone:new(name, droneInterface)
 end
 
 function Drone:gotoLocation(p)
+    if not self:isConnected() then return end
     self.droneInterface.clearArea()
     self.droneInterface.addArea(p.x, p.y, p.z)
     self.droneInterface.setAction("goto")
@@ -54,12 +35,14 @@ end
 Drone.methodMetadata["gotoLocation"] = { _dronePrecheck = true }
 
 function Drone:getPressure()
+    if not self:isConnected() then return end
     self.droneInterface.getDronePressure()
 end
 
 Drone.methodMetadata["getPressure"] = { _dronePrecheck = true }
 
 function Drone:standby()
+    if not self:isConnected() then return end
     print("drone entering standby")
     self.droneInterface.clearArea()
     self.droneInterface.clearWhitelistText()
@@ -73,6 +56,7 @@ function Drone:isConnected()
 end
 
 function Drone:toggleShowArea()
+    if not self:isConnected() then return end
     if self.isShowingArea then
         self.droneInterface.showArea()
     else
