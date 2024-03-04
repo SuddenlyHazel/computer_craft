@@ -67,3 +67,5 @@ setmetatable(Drone, {
         end
     end
 })
+
+return {Drone = Drone}
