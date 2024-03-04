@@ -34,7 +34,7 @@ function Drone.__index(table, key)
 end
 
 function Drone:new(name, droneInterface)
-    local instance = setmetatable({}, Drone)
+    local instance = setmetatable({}, {__index = Drone})
     instance.name = name
     instance.droneInterface = droneInterface
     instance.isShowingArea = false
