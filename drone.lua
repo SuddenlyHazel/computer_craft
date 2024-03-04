@@ -10,7 +10,7 @@ Drone.__index = function(table, key)
     local metadata = Drone.methodMetadata[key]
     -- Check if the method exists and is tagged
     pretty.print(pretty.pretty(table))
-    
+
     if type(value) == "function" and metadata and metadata._dronePrecheck then
         return function(self, ...)
             if self:isConnected() then
@@ -36,7 +36,8 @@ function buildFromInterface(...)
 end
 
 function Drone:new(name, droneInterface)
-    local newObject = setmetatable({}, self)
+    self = {}
+    setmetatable({}, self)
     self.__index = self
 
     self.droneInterface = droneInterface

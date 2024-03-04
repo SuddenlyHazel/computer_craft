@@ -57,9 +57,7 @@ function listenForComeCommand()
         local droneCount = #droneInterfaces
 
         for _, droneInterface in pairs(droneInterfaces) do
-            print(("moving drone %s"):format(pretty.render(pretty.pretty(location))))
             location = location:add(vector.new(1, 0, 0))
-            print(("dbg %s"):format(pretty.render(pretty.pretty(location))))
             droneInterface:gotoLocation(location)
         end
     end
