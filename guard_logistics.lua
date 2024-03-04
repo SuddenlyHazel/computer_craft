@@ -1,10 +1,10 @@
 local drone = require(".common.drone")
 
 
-droneInterfaces = { peripheral.find("drone_interface"), function(name, wrapped) 
+droneInterfaces = { peripheral.find("drone_interface", function(name, wrapped) 
     wrapped["iName"] = name
     return true
-end }
+end) }
 
 ---@type Drone[]
 droneInterfaces = drone.buildFromInterface(table.unpack(droneInterfaces))
