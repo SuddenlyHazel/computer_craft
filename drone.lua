@@ -26,7 +26,10 @@ function Drone:new(name, droneInterface)
 end
 
 function Drone:gotoLocation(p)
-    if not self:isConnected() then return end
+    if not self:isConnected() then
+        print("not connected", self:isConnected())
+        return 
+    end
     self.droneInterface.clearArea()
     self.droneInterface.addArea(p.x, p.y, p.z)
     self.droneInterface.setAction("goto")
