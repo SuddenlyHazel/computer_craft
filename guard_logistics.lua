@@ -43,6 +43,7 @@ function listenForComeCommand()
         print(("going to player at %s"):format(pretty.render(pretty.pretty(location))))
         local offset = vector.new(0,1,0)
         for _, droneInterface in pairs(droneInterfaces) do
+            print("moving drone")
             gotoPoint(location:add(offset), droneInterface)
             offset = offset:add(vector:new(1,0,1))
         end
