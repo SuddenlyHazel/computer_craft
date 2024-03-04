@@ -15,24 +15,6 @@ function buildFromInterface(...)
     return output
 end
 
-function Drone.__index(instance, key)
-    local value = rawget(Drone, key) or Drone[key]
-    local metadata = Drone.methodMetadata[key]
-
-    if type(value) == "function" and metadata and metadata._dronePrecheck then
-        -- Wrap the function if it requires precheck
-        return function(self, ...)
-            if instance:isConnected() then
-                return value(instance, ...)
-            else
-                print("Drone is not connected!")
-            end
-        end
-    else
-        return value
-    end
-end
-
 function Drone:new(name, droneInterface)
     local instance = setmetatable({}, {__index = Drone})
     instance.name = name
