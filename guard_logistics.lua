@@ -55,7 +55,7 @@ function listenForAttackCommand()
         print(("attacking around player at %s"):format(pretty.render(pretty.pretty(location))))
        
         for _, droneInterface in pairs(droneInterfaces) do
-            droneInterface.setVarable(message)
+            -- droneInterface.setVarable(message)
             local b1 = location.add(vector.new(16,-16,16))
             local b2 = location.add(vector.new(-16,16,-16))
             droneInterface.addArea(b1.x,b1.y,b1.z,b2.x,b2.y,b2.z, "box")
