@@ -1,8 +1,13 @@
 local drone = require(".common.drone")
 
----@type Drone[]
-droneInterfaces = { peripheral.find("drone_interface", drone.Drone.new) }
 
+droneInterfaces = { peripheral.find("drone_interface"), function(name, wrapped) 
+    wrapped["iName"] = name
+    return true
+end }
+
+---@type Drone[]
+droneInterfaces = 
 playerInterface = peripheral.find("inventoryManager")
 playerDetector = peripheral.find("playerDetector")
 
