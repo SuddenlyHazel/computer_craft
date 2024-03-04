@@ -86,7 +86,7 @@ function listenForAttackCommand()
 
             table.insert(cbs, function()
                 parallel.waitForAny(function()
-                    local id, message = rednet.receive("stopAttack", 1)
+                    local id, message = rednet.receive("stopAttack")
                     droneInterface.clearArea()
                     droneInterface.clearWhitelistText()
                     droneInterface.abortAction()
