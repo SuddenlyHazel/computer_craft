@@ -58,8 +58,7 @@ end
 
 Drone.methodMetadata["toggleShowArea"] = {_dronePrecheck = true}
 
-setmetatable(Drone, {
-    __index = function(table, key)
+Drone._mtIndex.__index = function(table, key)
         local value = rawget(Drone, key) -- Attempt to get the method directly from the class
         local metadata = Drone.methodMetadata[key]
         -- Check if the method exists and is tagged
@@ -78,6 +77,5 @@ setmetatable(Drone, {
             return value
         end
     end
-})
 
 return {Drone = Drone, buildFromInterface = buildFromInterface}
