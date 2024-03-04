@@ -32,6 +32,7 @@ function buildFromInterface(...)
     for _, v in pairs(args) do
         table.insert(output, Drone:new(v["iName"], v))
     end
+    pretty.print(pretty.pretty(output))
     return output
 end
 
@@ -45,7 +46,7 @@ function Drone:new(name, droneInterface)
     self.name = name
     
     print(("init drone with interface %s"):format(self.name))
-    return { newObject }
+    return newObject
 end
 
 function Drone:gotoLocation(p)
