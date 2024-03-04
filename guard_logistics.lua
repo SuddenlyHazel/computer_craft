@@ -1,7 +1,7 @@
 local drone = require(".common.drone")
 
 
-droneInterfaces = { peripheral.find("drone_interface", function(name, wrapped) 
+droneInterfaces = { peripheral.find("drone_interface", function(name, wrapped)
     wrapped["iName"] = name
     return true
 end) }

@@ -9,7 +9,7 @@ function buildFromInterface(...)
     for _, v in pairs(args) do
         table.insert(output, Drone.new(v["iName"], v))
     end
-    return args
+    return output
 end
 
 function Drone.new(name, droneInterface)
