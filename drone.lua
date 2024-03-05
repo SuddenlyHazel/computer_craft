@@ -2,9 +2,27 @@ pretty = require("cc.pretty")
 
 ---@class Drone
 ---@field name string
+---@field droneInterface table
 Drone = {}
 
 Drone.methodMetadata = {}
+
+---@class LocationSource
+---@field next fun(): ccTweaked.Vector
+LocationSource = {}
+
+---@param next fun(): ccTweaked.Vector
+---@return LocationSource
+function LocationSource:new(next)
+    local instance = setmetatable({}, { __index = LocationSource })
+    instance.next = next
+    return instance
+end
+
+---@return ccTweaked.Vector
+function LocationSource:location()
+    return self.next()
+end
 
 function buildFromInterface(...)
     local args = { ... }
@@ -17,6 +35,8 @@ function buildFromInterface(...)
 end
 
 ---comment
+---@param name string
+---@param droneInterface table
 ---@return Drone
 function Drone:new(name, droneInterface)
     local instance = setmetatable({}, { __index = Drone })
@@ -28,6 +48,8 @@ function Drone:new(name, droneInterface)
     return instance
 end
 
+---comment
+---@param p ccTweaked.Vector
 function Drone:gotoLocation(p)
     if not self:isConnected() then
         print("not connected", self:isConnected())
@@ -37,6 +59,37 @@ function Drone:gotoLocation(p)
     self.droneInterface.addArea(p.x, p.y, p.z)
     self.droneInterface.setAction("goto")
 end
+
+---comment
+---@param p LocationSource
+---@param max_distance number
+function Drone:follow(p, max_distance)
+    if not self:isConnected() then
+        print("not connected", self:isConnected())
+        return
+    end
+    local currentLocation = p.next()
+end
+
+function Drone:setName(name)
+    if not self:isConnected() then
+        print("not connected", self:isConnected())
+        return
+    end
+    self.droneInterface.setRenameString(name)
+    self.droneInterface.setAction(rename)
+end
+
+---comment
+---@return string
+function Drone:getName()
+    if not self:isConnected() then
+        print("not connected", self:isConnected())
+        return
+    end
+    return self.droneInterface.getDroneName()
+end
+
 
 Drone.methodMetadata["gotoLocation"] = { _dronePrecheck = true }
 
@@ -70,6 +123,10 @@ function Drone:toggleShowArea()
     end
 end
 
+---comment
+---@param allow_filter string
+---@param location ccTweaked.Vector
+---@return table
 function Drone:attack(allow_filter, location)
     self.droneInterface.clearArea()
     self.droneInterface.clearWhitelistText()

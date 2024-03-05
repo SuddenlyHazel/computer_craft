@@ -1,5 +1,14 @@
 {
     "Lua.diagnostics.globals": [
         "droneInterfaces"
-    ]
+    ],
+    "Lua.workspace.library": [
+        "C:/Users/Hazel/AppData/Roaming/Code/User/globalStorage/sumneko.lua/addonManager/addons/cc-tweaked/module/library"
+    ],
+    "Lua.runtime.version": "Lua 5.3",
+    "Lua.runtime.builtin": {
+        "io": "disable",
+        "os": "disable"
+    },
+    "Lua.workspace.checkThirdParty": false
 }

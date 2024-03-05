@@ -11,7 +11,8 @@
     "common" : [
         "log.lua",
         "/gui/buttons.lua",
-        "drone.lua"
+        "drone.lua",
+        "drone_controller.lua"
     ],
     "programs": [
         {
