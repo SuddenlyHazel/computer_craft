@@ -10,7 +10,7 @@ MpscChannel.__index = MpscChannel
 
 ---Safely getEpochTime in seconds using ccTweaked or falling back on lua if not present
 ---@return number
-local function getEpochTime()
+function getEpochTime()
     -- Check if we're running in an environment with ccTweaked
     if os.epoch then
         -- ccTweaked environment detected, use os.epoch
@@ -57,6 +57,7 @@ end
 ---@param message any
 ---@param timeout? number How long in seconds to wait before failing
 ---@return "closed" | "ok" | "no_consumer" | "timeout"
+
 function MpscChannel:send(message, timeout)
     local startTime = getEpochTime()
 
@@ -142,4 +143,4 @@ function MpscChannel:receive(timeout)
     return { value = message }
 end
 
-return { MpscChannel = MpscChannel }
+return { MpscChannel = MpscChannel, getEpochTime = getEpochTime }

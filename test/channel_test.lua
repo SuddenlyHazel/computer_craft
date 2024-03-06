@@ -86,10 +86,8 @@ end
 function TestConsumerFailed()
   local channel = MpscChannel.new()
 
-  local resultTable = {}
-
   local hdl = coroutine.create(function()
-
+    -- terminate coroutine immediately after starting
   end)
 
   coroutine.resume(hdl)
