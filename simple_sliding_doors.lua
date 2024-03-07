@@ -64,9 +64,11 @@ local function buttonListener()
         elseif colors.test(currentInput, OUTTER_DOOR_TOGGLE_STATE) and now + 3 > outter_door_last_at then
             outter_door_last_at = now
             os.queueEvent("door_cmd", "outter_door")
+            print("outter_door")
         elseif colors.test(currentInput, INNER_DOOR_TOGGLE_STATE) and now + 3 > inner_door_last_at then
             inner_door_last_at = now
             os.queueEvent("door_cmd", "inner_door")
+            print("inner_door")
         else
             print("ignoring signal..")
         end
