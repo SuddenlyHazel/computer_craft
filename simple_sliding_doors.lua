@@ -4,6 +4,8 @@ INNER_DOOR = colors.lightBlue
 OUTTER_DOOR_TOGGLE_STATE = colors.magenta
 OUTTER_DOOR = colors.red
 
+OUTTER_WORKING = false
+INNER_WORKING = false
 
 ---@alias DoorState
 ---| '"CLOSED"'
@@ -31,6 +33,7 @@ function getDoorState()
 end
 
 local function toggleInnerDoor()
+    INNER_WORKING = true
     local currentState = redstone.getBundledOutput("back")
 
     -- Ensure Outter door is closed
@@ -47,9 +50,11 @@ local function toggleInnerDoor()
     end
     
     os.sleep(3)
+    INNER_WORKING = false
 end
 
 local function toggleOutterDoor()
+    OUTTER_WORKING = true
     local currentState = redstone.getBundledOutput("back")
 
     -- Ensure Inner door is closed
@@ -64,15 +69,17 @@ local function toggleOutterDoor()
     else
         redstone.setBundledOutput("back", colors.combine(currentState, OUTTER_DOOR))
     end
-    
     os.sleep(3)
+    OUTTER_WORKING = false
 end
 
 local function listenForSignal()
     local event = os.pullEvent("redstone")
     local currentInput = redstone.getBundledInput("back")
 
-    if colors.test(currentInput, OUTTER_DOOR_TOGGLE_STATE) then
+    if INNER_WORKING or OUTTER_WORKING then
+        print("debounce")
+    elseif colors.test(currentInput, OUTTER_DOOR_TOGGLE_STATE) then
         toggleOutterDoor()
     elseif colors.test(currentInput, INNER_DOOR_TOGGLE_STATE) then
         toggleInnerDoor()
