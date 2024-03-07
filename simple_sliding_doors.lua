@@ -59,7 +59,12 @@ local function toggleOutterDoor()
         os.sleep(3)
     end
 
-    redstone.setBundledOutput("back", colors.combine(currentState, OUTTER_DOOR))
+    if colors.test(currentState, OUTTER_DOOR) then
+        redstone.setBundledOutput("back", colors.subtract(currentState, OUTTER_DOOR))
+    else
+        redstone.setBundledOutput("back", colors.combine(currentState, OUTTER_DOOR))
+    end
+    
     os.sleep(3)
 end
 
