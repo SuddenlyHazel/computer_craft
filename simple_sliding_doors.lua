@@ -30,21 +30,26 @@ function getDoorState()
     return "VENTING"
 end
 
-function openInnerDoor()
+local function toggleInnerDoor()
     local currentState = redstone.getBundledOutput("back")
-    -- Ensure Outter door is closed
 
+    -- Ensure Outter door is closed
     if colors.test(currentState, OUTTER_DOOR) then
         currentState = colors.subtract(currentState, OUTTER_DOOR)
         redstone.setBundledOutput("back", currentState)
         os.sleep(3)
     end
 
-    redstone.setBundledOutput("back", colors.combine(currentState, INNER_DOOR))
+    if colors.test(currentState, INNER_DOOR) then
+        redstone.setBundledOutput("back", colors.subtract(currentState, INNER_DOOR))
+    else
+        redstone.setBundledOutput("back", colors.combine(currentState, INNER_DOOR))
+    end
+    
     os.sleep(3)
 end
 
-function openOutterDoor()
+local function toggleOutterDoor()
     local currentState = redstone.getBundledOutput("back")
 
     -- Ensure Inner door is closed
@@ -58,14 +63,14 @@ function openOutterDoor()
     os.sleep(3)
 end
 
-function listenForSignal()
+local function listenForSignal()
     local event = os.pullEvent("redstone")
     local currentInput = redstone.getBundledInput("back")
 
     if colors.test(currentInput, OUTTER_DOOR_TOGGLE_STATE) then
-        openOutterDoor()
+        toggleOutterDoor()
     elseif colors.test(currentInput, INNER_DOOR_TOGGLE_STATE) then
-        openInnerDoor()
+        toggleInnerDoor()
     end
 end
 
