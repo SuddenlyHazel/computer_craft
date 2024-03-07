@@ -7,31 +7,6 @@ OUTTER_DOOR = colors.red
 OUTTER_WORKING = false
 INNER_WORKING = false
 
----@alias DoorState
----| '"CLOSED"'
----| '"OUTTER_OPEN"'
----| '"INNER_OPEN"'
----| '"VENTING"'
-
----comment
----@return DoorState
-function getDoorState()
-    local currentOutput = redstone.getBundledOutput("back")
-
-    local innerDoorOpen = colors.test(currentOutput, INNER_DOOR)
-    local outterDoorOpen = colors.test(currentOutput, OUTTER_DOOR)
-
-    if not innerDoorOpen and not outterDoorOpen then
-        return "CLOSED"
-    elseif innerDoorOpen then
-        return "OUTTER_OPEN"
-    elseif outterDoorOpen then
-        return "INNER_OPEN"
-    end
-
-    return "VENTING"
-end
-
 local function toggleInnerDoor()
     INNER_WORKING = true
     local currentState = redstone.getBundledOutput("back")
@@ -40,7 +15,7 @@ local function toggleInnerDoor()
     if colors.test(currentState, OUTTER_DOOR) then
         currentState = colors.subtract(currentState, OUTTER_DOOR)
         redstone.setBundledOutput("back", currentState)
-        os.sleep(3)
+        os.sleep(4)
     end
 
     if colors.test(currentState, INNER_DOOR) then
@@ -49,7 +24,7 @@ local function toggleInnerDoor()
         redstone.setBundledOutput("back", colors.combine(currentState, INNER_DOOR))
     end
     
-    os.sleep(3)
+    os.sleep(4)
     INNER_WORKING = false
 end
 
@@ -61,7 +36,7 @@ local function toggleOutterDoor()
     if colors.test(currentState, INNER_DOOR) then
         currentState = colors.subtract(currentState, INNER_DOOR)
         redstone.setBundledOutput("back", currentState)
-        os.sleep(3)
+        os.sleep(4)
     end
 
     if colors.test(currentState, OUTTER_DOOR) then
@@ -69,13 +44,13 @@ local function toggleOutterDoor()
     else
         redstone.setBundledOutput("back", colors.combine(currentState, OUTTER_DOOR))
     end
-    os.sleep(3)
+    os.sleep(4)
     OUTTER_WORKING = false
 end
 
 local function listenForSignal()
     local event = os.pullEvent("redstone")
-    print(event)
+    
     local currentInput = redstone.getBundledInput("back")
 
     if INNER_WORKING or OUTTER_WORKING then
