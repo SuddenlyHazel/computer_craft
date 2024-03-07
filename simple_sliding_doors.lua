@@ -76,24 +76,19 @@ local function buttonListener()
 end
 
 local function listenForSignal()
-    local _, value = os.pullEvent("door_cmd")
+    while true do
+        local _, value = os.pullEvent("door_cmd")
 
-    if INNER_WORKING or OUTTER_WORKING then
-        print("debounce")
-    elseif value == "outter_door" then
-        toggleOutterDoor()
-    elseif value == "inner_door" then
-        toggleInnerDoor()
+        if INNER_WORKING or OUTTER_WORKING then
+            print("debounce")
+        elseif value == "outter_door" then
+            toggleOutterDoor()
+        elseif value == "inner_door" then
+            toggleInnerDoor()
+        end
     end
 end
 
-local hdl = coroutine.create(function()
-    buttonListener()
-end)
-
-local result = coroutine.resume(hdl)
-print(result)
-
 while true do
-    listenForSignal()
+    parallel.waitForAny(listenForSignal, buttonListener)
 end
