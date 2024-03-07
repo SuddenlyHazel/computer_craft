@@ -23,7 +23,7 @@ local function toggleInnerDoor()
     else
         redstone.setBundledOutput("back", colors.combine(currentState, INNER_DOOR))
     end
-    
+
     os.sleep(4)
     INNER_WORKING = false
 end
@@ -48,19 +48,46 @@ local function toggleOutterDoor()
     OUTTER_WORKING = false
 end
 
+local function buttonListener()
+    local outter_door_last_at = os.epoch("utc")
+    local inner_door_last_at = os.epoch("utc")
+
+    while true do
+        local _ = os.pullEvent("redstone")
+        local currentInput = redstone.getBundledInput("back")
+        local now = os.epoch("utc")
+
+        if INNER_WORKING or OUTTER_WORKING then
+            print("already working")
+        elseif colors.test(currentInput, OUTTER_DOOR_TOGGLE_STATE) and now + 3 > outter_door_last_at then
+            outter_door_last_at = now
+            os.queueEvent("door_cmd", "outter_door")
+        elseif colors.test(currentInput, INNER_DOOR_TOGGLE_STATE) and now + 3 > inner_door_last_at then
+            inner_door_last_at = now
+            os.queueEvent("door_cmd", "inner_door")
+        else
+            print("ignoring signal..")
+        end
+    end
+end
+
 local function listenForSignal()
-    local event = os.pullEvent("redstone")
-    
-    local currentInput = redstone.getBundledInput("back")
+    local _, value = os.pullEvent("door_cmd")
 
     if INNER_WORKING or OUTTER_WORKING then
         print("debounce")
-    elseif colors.test(currentInput, OUTTER_DOOR_TOGGLE_STATE) then
+    elseif value == "outter_door" then
         toggleOutterDoor()
-    elseif colors.test(currentInput, INNER_DOOR_TOGGLE_STATE) then
+    elseif value == "inner_door" then
         toggleInnerDoor()
     end
 end
+
+local hdl = coroutine.create(function()
+    buttonListener()
+end)
+
+coroutine.resume(hdl)
 
 while true do
     listenForSignal()
