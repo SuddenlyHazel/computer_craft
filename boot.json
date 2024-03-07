@@ -46,6 +46,14 @@
             "files": [
                 "guard_logistics.lua"
             ]
+        },
+        {
+            "name": "Simple Locking Sliding Door",
+            "id": "simple_sliding_doors",
+            "startFile" : "simple_sliding_doors.lua",
+            "files": [
+                "simple_sliding_doors.lua"
+            ]
         }
     ],
     "deployments" : {
@@ -60,6 +68,9 @@
         },
         "guard_logistics" : {
             "programs" : ["guard_logistics"]
+        },
+        "station_airlock_1" : {
+            "programs" : ["simple_sliding_doors"]
         }
     }
 }
