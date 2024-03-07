@@ -40,7 +40,7 @@ function openInnerDoor()
         os.sleep(3)
     end
 
-    colors.setBundledOutput("back", colors.combine(currentState, INNER_DOOR))
+    redstone.setBundledOutput("back", colors.combine(currentState, INNER_DOOR))
     os.sleep(3)
 end
 
@@ -54,7 +54,7 @@ function openOutterDoor()
         os.sleep(3)
     end
 
-    colors.setBundledOutput("back", colors.combine(currentState, OUTTER_DOOR))
+    redstone.setBundledOutput("back", colors.combine(currentState, OUTTER_DOOR))
     os.sleep(3)
 end
 
