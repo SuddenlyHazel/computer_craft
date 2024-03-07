@@ -75,6 +75,7 @@ end
 
 local function listenForSignal()
     local event = os.pullEvent("redstone")
+    print(event)
     local currentInput = redstone.getBundledInput("back")
 
     if INNER_WORKING or OUTTER_WORKING then
