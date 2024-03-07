@@ -23,7 +23,7 @@ local function toggleInnerDoor()
     else
         redstone.setBundledOutput("back", colors.combine(currentState, INNER_DOOR))
     end
-
+    os.sleep(3)
     INNER_WORKING = false
 end
 
@@ -43,7 +43,7 @@ local function toggleOutterDoor()
     else
         redstone.setBundledOutput("back", colors.combine(currentState, OUTTER_DOOR))
     end
-    
+    os.sleep(3)
     OUTTER_WORKING = false
 end
 
