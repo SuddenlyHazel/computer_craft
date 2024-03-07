@@ -55,7 +55,7 @@ local function buttonListener()
     while true do
         local _ = os.pullEvent("redstone")
         print("got redstone!")
-        
+
         local currentInput = redstone.getBundledInput("back")
         local now = os.epoch("utc")
 
@@ -89,7 +89,8 @@ local hdl = coroutine.create(function()
     buttonListener()
 end)
 
-coroutine.resume(hdl)
+local result = coroutine.resume(hdl)
+print(result)
 
 while true do
     listenForSignal()
