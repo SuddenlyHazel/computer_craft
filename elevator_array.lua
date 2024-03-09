@@ -16,6 +16,10 @@ local function integratorWatcher(integrator)
     local lastState = integrator.getInput("bottom")
     local lastStateAt = os.epoch("utc")
 
+    for _, v in pairs({"top", "bottom", "left", "right", "front", "back"}) do
+        integrator.setOutput(v, false)
+    end
+
     while true do
         sleep(0.25)
         local now = os.epoch("utc")
