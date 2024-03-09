@@ -17,7 +17,7 @@ local function integratorWatcher(integrator)
     local lastStateAt = os.epoch("utc")
 
     while true do
-        sleep(0.5)
+        sleep(0.25)
         local now = os.epoch("utc")
         local currentState = integrator.getInput("bottom")
         local currentOutput = integrator.getOutput("back")
