@@ -54,6 +54,14 @@
             "files": [
                 "simple_sliding_doors.lua"
             ]
+        },
+        {
+            "name": "Elevator Array Program",
+            "id": "elevator_array",
+            "startFile" : "elevator_array.lua",
+            "files": [
+                "elevator_array.lua"
+            ]
         }
     ],
     "deployments" : {
@@ -71,6 +79,9 @@
         },
         "station_airlock_1" : {
             "programs" : ["simple_sliding_doors"]
+        },
+        "high_rise_elevator_1" : {
+            "programs" : ["elevator_array"]
         }
     }
 }
