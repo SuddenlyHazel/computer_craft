@@ -20,7 +20,7 @@ local function integratorWatcher(integrator)
         sleep(0.5)
         local now = os.epoch("utc")
         local currentState = integrator.getInput("bottom")
-        local currentOutput = integrator.getOutput("front")
+        local currentOutput = integrator.getOutput("back")
 
         if currentState ~= lastState then
             lastState = currentState
@@ -28,7 +28,7 @@ local function integratorWatcher(integrator)
         end
 
         if now + 2 > lastStateAt and currentState ~= currentOutput then
-            integrator.setOutput("front", currentState)
+            integrator.setOutput("back", currentState)
         end
     end
 end
